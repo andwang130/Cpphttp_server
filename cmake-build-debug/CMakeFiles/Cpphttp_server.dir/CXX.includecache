@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/meidai/下载/Cpphttp_server/http_server.cpp
+
+/home/meidai/下载/Cpphttp_server/mian.cpp
+iostream
+-
+
