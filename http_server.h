@@ -4,23 +4,35 @@
 #include<arpa/inet.h>
 #include<iostream>
 using namespace std;
-class Cserver
+struct Server_info
 {
-private:
-    Cserver();
     int port;
     char *ip;
+
     int server_socket;
+};
+struct Requests
+{
     string headers;
     string body;
     string url;
-    sockaddr_in serever_in;
-    int epoll_fd;
-    int process_num;
-    int events_num;
-    int Content_Length;
+    int Content_Length=0;
     int headers_length;
     int body_length;
+};
+struct Epoll_info
+{
+    int epoll_fd;
+    int process_num;
+    int events_num=10;
+};
+class Cserver
+{
+private:
+    sockaddr_in serever_in;
+    Server_info server_info;
+    Requests requests;
+    Epoll_info epoll_info;
 public:
     void init();
     void server_bind();
@@ -33,7 +45,11 @@ public:
     int get_Content_Length();
     int str_to_int(string str);
     void Content_Length_analysis(int coon);
-    void chunked_analysis(int coon));
+    void chunked_analysis(int coon);
+    void close_socket(int coon);
+    void run();
+    Cserver(Server_info serinfo);
+
 };
 
 

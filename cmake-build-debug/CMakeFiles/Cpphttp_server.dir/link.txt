@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/Cpphttp_server.dir/mian.cpp.o CMakeFiles/Cpphttp_server.dir/http_server.cpp.o  -o Cpphttp_server 
