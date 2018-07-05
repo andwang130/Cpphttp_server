@@ -3,6 +3,8 @@
 #include <string.h>
 #include <regex>
 #include<unistd.h>
+#include "http_parser.h"
+
 Cserver::Cserver(Server_info serinfo)
 {
     server_info.ip=serinfo.ip;
@@ -113,13 +115,18 @@ void Cserver::server_recv(int coon)
 
         memset(req,0, sizeof(req));
         int ret=recv(coon,req,1024,0);
+        if(ret==-1)
+        {
+            close_socket(coon);
+            break ;
+        }
         if(get_requests_head(req))
         {
             break;
         }
     }
     requests.Content_Length=get_Content_Length();
-    cout<<requests.headers<<endl;
+    cout<<requests.Content_Length<<endl;
     if (requests.Content_Length!=0)
     {
         Content_Length_analysis(coon);
@@ -128,7 +135,7 @@ void Cserver::server_recv(int coon)
     {
         chunked_analysis(coon);
     }
-    cout<<requests.headers<<endl;
+    cout<<requests.body<<endl;
 }
 void Cserver::Content_Length_analysis(int coon)
 {
@@ -169,29 +176,32 @@ bool Cserver::get_requests_head(char *req)
     int req_lent = strlen(req);
     int flag_lent = strlen(flag);
     cout<<req_lent<<endl;
-    cout<<flag_lent<<endl;
     int i=0;
     bool _return=false;
     for (; i < req_lent; i++)
     {
         int j=0;
         requests.headers+=req[i];
-        for (; j< flag_lent; j++)
+        if(req[i]=='\n')
         {
-            if (req[i+j] != flag[j])
-            {
+
+        }
+        for (; j< flag_lent; j++) {
+            if (req[i + j] != flag[j]) {
                 break;
             }
+
 
         }
         if (j == flag_lent)
         {
             _return=true;
+            break;
         }
     }
-    cout<<_return<<endl;
+    //cout<<requests.headers<<endl;
+    cout<<requests.headers<<endl;
     requests.headers_length=i+flag_lent;  //headers长度
-    cout<<i<<endl;
     if(requests.headers_length<req_lent)
     {
 
@@ -209,7 +219,7 @@ int Cserver::get_Content_Length()
     if(!requests.headers.empty())
     {
         cmatch st;
-        regex length("Content-Length: (\\d+)");
+        regex length("content-length: (\\d+)");
 
         if (regex_search(requests.headers.c_str(), st, length))
         {
@@ -221,6 +231,7 @@ int Cserver::get_Content_Length()
         }
 
     }
+    return 0;
 }
 int Cserver::str_to_int(string str) //字符串转int函数
 {
