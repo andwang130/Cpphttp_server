@@ -4,7 +4,7 @@
 #include <regex>
 #include<unistd.h>
 #include "http_parser.h"
-
+#include "my_http_parser.h"
 Cserver::Cserver(Server_info serinfo)
 {
     server_info.ip=serinfo.ip;
@@ -110,177 +110,71 @@ void Cserver::server_accept()
 }
 void Cserver::server_recv(int coon)
 {   char req[1024];
+    Cparser * parser=new Cparser;
     while(true)
     {
 
         memset(req,0, sizeof(req));
         int ret=recv(coon,req,1024,0);
-        if(ret==-1)
+        if(ret==-1||ret==0)
         {
             close_socket(coon);
-            break ;
+            delete parser;
+            return;
         }
-        if(get_requests_head(req))
+        if(parser->get_requests_head(req))
         {
             break;
         }
     }
-    requests.Content_Length=get_Content_Length();
-    cout<<requests.Content_Length<<endl;
-    if (requests.Content_Length!=0)
+    cout<<"Content_Length"<<parser->requests->analysis<<endl;
+    cout<<"conten"<<parser->requests->Content_Length<<endl;
+    cout<<"body"<<parser->requests->body_length<<endl;
+    if (parser->requests->body_length<parser->requests->Content_Length&&parser->requests->analysis=="content-length")
     {
-        Content_Length_analysis(coon);
-    }
-    else
-    {
-        chunked_analysis(coon);
-    }
-    cout<<requests.body<<endl;
-}
-void Cserver::Content_Length_analysis(int coon)
-{
-    char req[1024];
-    int ret;
-    while(requests.body_length<requests.Content_Length)
-    {
-        memset(req,0,1024);
-        ret=recv(coon,req,1024,0);
-        requests.body_length+=ret;
-        requests.body+=req;
-    }
-}
-void Cserver::chunked_analysis(int coon)
-{
-
-    cmatch st;
-    regex chunked("\r\n0\r\n\r\n");
-    char req[1024];
-    if (!regex_search(requests.body.c_str(), st, chunked)) {
         while (true) {
+            memset(req,0,1024);
+            int ret=recv(coon,req,1024,0);
+            if(ret==-1||ret==0)
+            {
+                close_socket(coon);
+                delete parser;
+                return;
+            }
+
+            if(parser->Content_Length_analysis(req,ret))
+            {
+                break;
+            }
+        }
+    }
+    if(parser->requests->analysis=="Transfer-Encoding")
+    {
+
+        while (true)
+        {
+
             memset(req, 0, 1024);
-            recv(coon, req, 1024, 0);
-            requests.body += req;
-            if (regex_search(req, st, chunked)) {
+            int ret = recv(coon, req, 1024, 0);
+            if(ret==-1||ret==0)
+            {
+                close_socket(coon);
+                delete parser;
+                return;
+            }
+            if(parser->chunked_analysis(req))
+            {
+
                 break;
             }
-
         }
     }
+    cout<<parser->requests->body<<endl;
 
-}
-bool Cserver::get_requests_head(char *req)
-{
-    //这个函数用来查找到\r\n\r\n的位置，取到head；
-    //
-    char flag[5] = "\r\n\r\n";
-    int req_lent = strlen(req);
-    int flag_lent = strlen(flag);
-    cout<<req_lent<<endl;
-    int i=0;
-    bool _return=false;
-    for (; i < req_lent; i++)
-    {
-        int j=0;
-        requests.headers+=req[i];
-        if(req[i]=='\n')
-        {
+    cout<<"****************"<<endl;
+    int i=parser->requests->body_length-parser->chunked();
 
-        }
-        for (; j< flag_lent; j++) {
-            if (req[i + j] != flag[j]) {
-                break;
-            }
-
-
-        }
-        if (j == flag_lent)
-        {
-            _return=true;
-            break;
-        }
-    }
-    //cout<<requests.headers<<endl;
-    cout<<requests.headers<<endl;
-    requests.headers_length=i+flag_lent;  //headers长度
-    if(requests.headers_length<req_lent)
-    {
-
-        for(int i=requests.headers_length;i<req_lent;i++)
-        {
-            requests.body+=req[i];
-        }
-        requests.body_length=req_lent-requests.headers_length;
-
-    }
-    return _return;
-}
-int Cserver::get_Content_Length()
-{
-    if(!requests.headers.empty())
-    {
-        cmatch st;
-        regex length("content-length: (\\d+)");
-
-        if (regex_search(requests.headers.c_str(), st, length))
-        {
-            return str_to_int(st[1]);
-        }
-        else
-        {
-            return 0;
-        }
-
-    }
-    return 0;
-}
-int Cserver::str_to_int(string str) //字符串转int函数
-{
-    if (str.empty())
-    {
-        throw "不能传入一个空的字符串";   //弹出异常
-    }
-    int Int = 0;
-    for (int i = 0; i<str.size(); i++)
-    {
-
-        switch (str[i])
-        {
-            case '0':
-                Int = Int * 10 + 0;
-                break;
-            case '1':
-                Int = Int * 10 + 1;
-                break;
-            case '2':
-                Int = Int * 10 + 2;
-                break;
-            case '3':
-                Int = Int * 10 + 3;
-                break;
-            case '4':
-                Int = Int * 10 + 4;
-                break;
-            case '5':
-                Int = Int * 10 + 5;
-                break;
-            case '6':
-                Int = Int * 10 + 6;
-                break;
-            case '7':
-                Int = Int * 10 + 7;
-                break;
-            case '8':
-                Int = Int * 10 + 8;
-                break;
-            case '9':
-                Int = Int * 10 + 9;
-                break;
-
-            default:
-                throw "无法转换成整型，参数有错误";
-        }
-    }
-    return Int;
+    delete parser;
 }
 void Cserver::run()
 {
