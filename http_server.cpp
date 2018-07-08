@@ -3,7 +3,6 @@
 #include <string.h>
 #include <regex>
 #include<unistd.h>
-#include "http_parser.h"
 #include "my_http_parser.h"
 Cserver::Cserver(Server_info serinfo)
 {
@@ -127,9 +126,7 @@ void Cserver::server_recv(int coon)
             break;
         }
     }
-    cout<<"Content_Length"<<parser->requests->analysis<<endl;
-    cout<<"conten"<<parser->requests->Content_Length<<endl;
-    cout<<"body"<<parser->requests->body_length<<endl;
+
     if (parser->requests->body_length<parser->requests->Content_Length&&parser->requests->analysis=="content-length")
     {
         while (true) {
@@ -168,11 +165,12 @@ void Cserver::server_recv(int coon)
                 break;
             }
         }
+        parser->requests->body_length-parser->get_first_chunked_size();
+
+
     }
-    cout<<parser->requests->body<<endl;
 
     cout<<"****************"<<endl;
-    int i=parser->requests->body_length-parser->chunked();
 
     delete parser;
 }

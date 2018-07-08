@@ -4,6 +4,7 @@
 #include<arpa/inet.h>
 #include<iostream>
 #include <map>
+#include "RequestHandler.h"
 using namespace std;
 struct Server_info
 {
@@ -17,6 +18,11 @@ struct Epoll_info
     int epoll_fd;
     int process_num;
     int events_num=10;
+};
+struct configure{
+    int Process_number;
+    map<string,BaseHandler> map_handler;
+
 };
 class Cserver
 {

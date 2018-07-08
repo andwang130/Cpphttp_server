@@ -1,7 +1,7 @@
 //
 // Created by meidai on 18-7-6.
 //
-
+#pragma once
 #ifndef UNTITLED5_MY_HTTP_PARSER_H
 #define UNTITLED5_MY_HTTP_PARSER_H
 
@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <map>
+
 using namespace std;
 struct Requests
 {
@@ -22,6 +23,7 @@ struct Requests
     int Content_Length=0;
     int headers_length=0;
     int body_length=0;
+    int body_off=0;
 };
 class Cparser
 {
@@ -34,7 +36,8 @@ public:
     int str_to_int(string str);
     bool Content_Length_analysis(char *req,int ret);
     bool chunked_analysis(char *req);
-    int chunked();
+    int get_first_chunked_size();
+    int chunked(char *buf,int len,int &chunked_len);
     Cparser();
     ~Cparser();
 };

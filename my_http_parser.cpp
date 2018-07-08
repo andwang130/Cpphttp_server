@@ -3,7 +3,7 @@
 //
 #include "my_http_parser.h"
 #include <regex>
-
+#include <math.h>
 Cparser::Cparser()
 {
     requests=new Requests;
@@ -57,27 +57,64 @@ int  hex2num(string s) {
         {
             sum += (s[i] - 55) * pow(16, count - i - 1);
         }
+        else if (s[i] >= 'a' && s[i] <= 'f')//字母字符的转换
+        {
+            sum += (s[i] - 87) * pow(16, count - i - 1);
+        }
     }
     return sum;
 }
-int Cparser::chunked()
+int Cparser::get_first_chunked_size()
 {
-
-
         string str;
-        int i=0;
+        int stara=0;
+        int end=0;
+        int chunked_len=0;
+        int chunk_size=0;
+        while (true) {
 
-        cout<<hex2num("11c4")<<endl;
-//        while (true) {
-//            int lent=hex2num(requests->body[i]);
-//            str += string(requests->body.begin() + i + 4, requests->body.begin() + lent);
-//            i=lent;
-//        }
-        return i;
+             chunk_size = chunked((char *) requests->body.c_str(), chunk_size, chunked_len);
+            if(chunk_size==0)
+            {
+                requests->body_off=1; //body_off接受完毕
+                break;
+            }
+            end+=chunk_size;
+            if(end>requests->body_length)
+            {
+                break;
+            }
+            str += string(requests->body.begin()+stara+chunked_len, requests->body.begin() + chunk_size);
+            stara=end;
+        }
+        requests->body=str;
+    return chunk_size;
+
+
+}
+int Cparser::chunked(char *buf,int len,int &chunked_len)
+{
+        string str;
+        for(int i=len;i<7;i++)
+        {
+
+            if((buf[i] >= 'a' && buf[i] <= 'f')||(buf[i]>= 'A' &&buf[i] <= 'F')||(buf[i] >= '0' && buf[i] <= '9'))
+            {
+                str+=requests->body[i];
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        chunked_len=sizeof(str.c_str());
+        return hex2num(str);
 
 
 
 }
+
 bool Cparser::get_requests_head(char *req)
 {
     //这个函数用来查找到\r\n\r\n的位置，取到head；
