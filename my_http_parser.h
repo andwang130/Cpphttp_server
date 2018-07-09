@@ -35,7 +35,7 @@ public:
     int get_Content_Length();
     int str_to_int(string str);
     bool Content_Length_analysis(char *req,int ret);
-    bool chunked_analysis(char *req);
+    bool chunked_analysis(char *req,int ret);
     int get_first_chunked_size();
     int chunked(char *buf,int len,int &chunked_len);
     Cparser();

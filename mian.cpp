@@ -3,33 +3,49 @@ using namespace std;
 
 #include <string.h>
 #include "http_server.h"
-#include "RequestHandler.h"
+#include "Application.h"
+BaseHandler * Application::Route()
+{
+    if(path("/baidu"))
+    {
+        BaseHandler *base1=new loginHandel;
+        return base1;
+    }
+    else if(path("/desgin"))
+    {
+        BaseHandler *design=new desingnhandel;
+        return  design;
+    }
+}
 int main()
 {
-//    http_parser_settings stettings;
-//    stettings.on_url=my_on_url;
-//    stettings.on_header_field=my_on_headers;
-//    http_parser *parser=new http_parser;
-//    http_parser_init(parser,HTTP_REQUEST);
-//    http_request *request=new_http_request();
-//    parser->data=request;
-//
-//    int lent= strlen(http_get_raw);
-//    int npar=http_parser_execute(parser,&stettings,http_get_raw,lent);
-//    cout<<npar<<endl;
-//Server_info server_info;
-//server_info.ip="127.0.0.1";
-//server_info.port=8000;
-//Cserver cserver(server_info);
-//Cserver cserver1=new (cserver);
-//cserver.run();
-    BaseHandler *base=new loginHandel;
-    base->a="sdsds";
-    base->get();
-    BaseHandler base1=base1;
-    base1.a="aaaa";
-    cout<<base1.a<<endl;
-    base1.get();
-return 0;
-}
 
+Server_info server_info;
+server_info.ip="127.0.0.1";
+server_info.port=8800;
+Cserver cserver(server_info);
+cserver.run();
+
+
+//    BaseHandler *base;
+//    BaseHandler *base1=new loginHandel;
+//    base=base1;
+//    delete base;
+//    if(base!= nullptr)
+//    {
+//        cout<<"delete base"<<endl;
+//        delete base1;
+//
+//    }
+//    Requests re;
+//    re.method="GET";
+//    re.url="baidu";
+//    Application app;
+//    app.set_requtest(&re);
+//    app.implemen();
+//    Application app1;
+//    re.url="/desgin";
+//    app1.set_requtest(&re);
+//    app1.implemen();
+//    return 0;
+}

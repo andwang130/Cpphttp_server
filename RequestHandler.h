@@ -13,37 +13,24 @@ using namespace std;
 class BaseHandler
 {
 
-protected:
-    Requests *requests;
+public:
 
     string get_argument(string key,string Default=NULL);
     string get_body();
     void wirte();
+
 public:
+    Requests *requests;
+    void set_requtest(Requests *requests1)
+    {
+        requests=requests1;
+    }
     string a;
     virtual ~BaseHandler()
-    {cout << "father 的构造函数" << "\n";}
-
-    BaseHandler()
     {
 
     }
 
-     BaseHandler(BaseHandler &handler)
-    {
-
-//        requests->body=handler.requests->body;
-//        requests->body_off=handler.requests->body_off;
-//        requests->body_length=handler.requests->body_length;
-//        requests->analysis=handler.requests->analysis;
-//        requests->url=handler.requests->url;
-//        requests->headers=handler.requests->headers;
-//        requests->method=handler.requests->method;
-//        requests->headers_str=handler.requests->headers_str;
-//        requests->version=handler.requests->version;
-         //this->a=handler.a;
-
-    }
     virtual void init()
     {
 
@@ -68,14 +55,11 @@ public:
     {
         cout<<"loginHandel 构造"<<endl;
     }
-//    void get()
-//    {
-//        cout<<a<<endl;
-//
-//    }
+
     void post()
     {
-        cout<<"post"<<endl;
+        cout<<requests->headers_str<<endl;
+        cout<<requests->body<<endl;
     }
     void init()
     {
@@ -83,6 +67,21 @@ public:
     }
     ~loginHandel()
     {
-        cout<<"loginHandel"<<endl;
+        cout<<"loginHandel 析构"<<endl;
+
     }
+};
+class desingnhandel:public BaseHandler
+{
+public:
+    ~desingnhandel()
+    {
+
+    }
+    void get()
+    {
+        cout<<requests->body<<endl;
+    }
+
+
 };

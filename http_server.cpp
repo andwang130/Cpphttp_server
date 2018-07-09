@@ -4,6 +4,7 @@
 #include <regex>
 #include<unistd.h>
 #include "my_http_parser.h"
+#include "Application.h"
 Cserver::Cserver(Server_info serinfo)
 {
     server_info.ip=serinfo.ip;
@@ -115,6 +116,7 @@ void Cserver::server_recv(int coon)
 
         memset(req,0, sizeof(req));
         int ret=recv(coon,req,1024,0);
+
         if(ret==-1||ret==0)
         {
             close_socket(coon);
@@ -147,8 +149,8 @@ void Cserver::server_recv(int coon)
     }
     if(parser->requests->analysis=="Transfer-Encoding")
     {
-
-        while (true)
+        parser->chunked_analysis(req,0);
+        while (parser->requests->body_off!=1)
         {
 
             memset(req, 0, 1024);
@@ -159,7 +161,7 @@ void Cserver::server_recv(int coon)
                 delete parser;
                 return;
             }
-            if(parser->chunked_analysis(req))
+            if(parser->chunked_analysis(req,ret))
             {
 
                 break;
@@ -171,7 +173,12 @@ void Cserver::server_recv(int coon)
     }
 
     cout<<"****************"<<endl;
-
+    parser->requests->body_length-parser->get_first_chunked_size();
+    cout<<parser->requests->url<<endl;
+    Application *app=new Application;
+    app->set_requtest(parser->requests);
+    app->implemen();
+    delete app;
     delete parser;
 }
 void Cserver::run()

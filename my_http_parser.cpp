@@ -10,14 +10,18 @@ Cparser::Cparser()
 }
 Cparser::~Cparser()
 {
-    delete requests;
+    if(requests!= nullptr)
+    {
+        cout<<"Cparser 析构"<<endl;
+        delete requests;
+    }
 }
 bool Cparser::Content_Length_analysis(char *req,int ret)
 {
 
 
     requests->body_length+=ret;
-    requests->body+=req;
+    requests->body+=string(req,ret);
     if(requests->body_length>=requests->Content_Length)
     {
         return true;
@@ -28,14 +32,18 @@ bool Cparser::Content_Length_analysis(char *req,int ret)
     }
 }
 
-bool Cparser::chunked_analysis(char *req)
+bool Cparser::chunked_analysis(char *req,int ret)
 {
 
     cmatch st;
     regex chunked("\r\n0\r\n\r\n");
-    requests->body += req;
-    if(regex_search(requests->body.c_str(), st, chunked))
+    if(ret>0)
     {
+        requests->body += string(req, ret);
+    }
+    if(regex_search(req, st, chunked))
+    {
+        requests->body_off=1;
         return true;
     }
     else
@@ -79,14 +87,21 @@ int Cparser::get_first_chunked_size()
                 requests->body_off=1; //body_off接受完毕
                 break;
             }
-            end+=chunk_size;
+            end+=chunk_size+stara+chunked_len;
             if(end>requests->body_length)
             {
                 break;
             }
-            str += string(requests->body.begin()+stara+chunked_len, requests->body.begin() + chunk_size);
+            cout<<"chunk_size"<<chunk_size<<endl;
+            cout<<"end"<<end<<endl;
+            cout<<"chunked_len"<<chunked_len<<endl;
+            cout<<requests->body_length<<endl;
+            string _str;
+            str += string(requests->body.begin()+stara+chunked_len, requests->body.begin() +end);
+            cout<<strlen(str.c_str())<<endl;
             stara=end;
         }
+
         requests->body=str;
     return chunk_size;
 
@@ -95,12 +110,14 @@ int Cparser::get_first_chunked_size()
 int Cparser::chunked(char *buf,int len,int &chunked_len)
 {
         string str;
+        chunked_len=0;
         for(int i=len;i<7;i++)
         {
 
             if((buf[i] >= 'a' && buf[i] <= 'f')||(buf[i]>= 'A' &&buf[i] <= 'F')||(buf[i] >= '0' && buf[i] <= '9'))
             {
                 str+=requests->body[i];
+                chunked_len++;
             }
             else
             {
@@ -108,7 +125,7 @@ int Cparser::chunked(char *buf,int len,int &chunked_len)
             }
         }
 
-        chunked_len=sizeof(str.c_str());
+        chunked_len+=2;
         return hex2num(str);
 
 
@@ -122,10 +139,8 @@ bool Cparser::get_requests_head(char *req)
     char flag[5] = "\r\n\r\n";
     int req_lent = strlen(req);
     int flag_lent = strlen(flag);
-    cout<<req_lent<<endl;
     int i=0;
     bool _return=false;
-
     //取第一行，拿到请求类型，htpp版本
     for(;i<req_lent;i++)
     {
@@ -181,7 +196,7 @@ bool Cparser::get_requests_head(char *req)
     if(requests->headers_length<req_lent)
     {
 
-        for(int i=requests->headers_length;i<req_lent;i++)
+        for(int i=requests->headers_length;i<req_lent-1;i++)
         {
             requests->body+=req[i];
         }

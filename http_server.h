@@ -42,5 +42,3 @@ public:
     Cserver(Server_info serinfo);
 
 };
-
-
