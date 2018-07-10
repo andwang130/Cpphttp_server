@@ -3,4 +3,4 @@ project(untitled5)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Cpphttp_server mian.cpp http_server.h http_server.cpp RequestHandler.h my_http_parser.h my_http_parser.cpp Application.h Application.cpp)
+add_executable(Cpphttp_server mian.cpp http_server.h http_server.cpp RequestHandler.h my_http_parser.h my_http_parser.cpp Application.h Application.cpp RequestHandeler.cpp)

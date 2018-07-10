@@ -30,7 +30,7 @@ class Cparser
 public:
     Requests *requests;
 
-    bool get_requests_head(char *req);
+    bool get_requests_head(string &req,int ret);
     void set_body(char *req,int i);
     int get_Content_Length();
     int str_to_int(string str);

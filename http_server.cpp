@@ -5,6 +5,13 @@
 #include<unistd.h>
 #include "my_http_parser.h"
 #include "Application.h"
+#include<sys/time.h>
+int64_t getCurrentTime()      //直接调用这个函数就行了，返回值最好是int64_t，long long应该也可以
+{
+    struct timeval tv;
+    gettimeofday(&tv,NULL);    //该函数在sys/time.h头文件中
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 Cserver::Cserver(Server_info serinfo)
 {
     server_info.ip=serinfo.ip;
@@ -109,25 +116,28 @@ void Cserver::server_accept()
 
 }
 void Cserver::server_recv(int coon)
-{   char req[1024];
+{   int64_t stara_time=getCurrentTime();
+    char req[1024];
     Cparser * parser=new Cparser;
     while(true)
     {
 
         memset(req,0, sizeof(req));
         int ret=recv(coon,req,1024,0);
-
+        string str=string(req,0,ret);
         if(ret==-1||ret==0)
         {
             close_socket(coon);
             delete parser;
             return;
         }
-        if(parser->get_requests_head(req))
+        if(parser->get_requests_head(str,ret))
         {
             break;
         }
+
     }
+
 
     if (parser->requests->body_length<parser->requests->Content_Length&&parser->requests->analysis=="content-length")
     {
@@ -171,15 +181,16 @@ void Cserver::server_recv(int coon)
 
 
     }
-
     cout<<"****************"<<endl;
-    parser->requests->body_length-parser->get_first_chunked_size();
     cout<<parser->requests->url<<endl;
     Application *app=new Application;
     app->set_requtest(parser->requests);
     app->implemen();
     delete app;
     delete parser;
+    int64_t end_times=getCurrentTime();
+    cout<<end_times-stara_time<<endl;
+    cout<<end_times<<endl;
 }
 void Cserver::run()
 {

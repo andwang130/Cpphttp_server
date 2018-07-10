@@ -9,13 +9,18 @@
 
 #include <iostream>
 #include "my_http_parser.h"
+#include <map>
 using namespace std;
 class BaseHandler
 {
 
-public:
-
-    string get_argument(string key,string Default=NULL);
+protected:
+    bool data_flage= false;
+    map<string,string> map_data;
+    void _get_argument__foram_data();
+    void _get_argument_json();
+    void _get_argument_form_urlencoded();
+    string get_argument(string key);
     string get_body();
     void wirte();
 
@@ -59,7 +64,8 @@ public:
     void post()
     {
         cout<<requests->headers_str<<endl;
-        cout<<requests->body<<endl;
+       cout<<requests->body<<endl;
+      cout<< get_argument("sdsdsd")<<endl;
     }
     void init()
     {

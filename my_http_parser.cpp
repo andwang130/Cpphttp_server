@@ -21,7 +21,7 @@ bool Cparser::Content_Length_analysis(char *req,int ret)
 
 
     requests->body_length+=ret;
-    requests->body+=string(req,ret);
+    requests->body+=string(req,0,ret);
     if(requests->body_length>=requests->Content_Length)
     {
         return true;
@@ -39,7 +39,7 @@ bool Cparser::chunked_analysis(char *req,int ret)
     regex chunked("\r\n0\r\n\r\n");
     if(ret>0)
     {
-        requests->body += string(req, ret);
+        requests->body += string(req, 0,ret);
     }
     if(regex_search(req, st, chunked))
     {
@@ -92,12 +92,14 @@ int Cparser::get_first_chunked_size()
             {
                 break;
             }
-            cout<<"chunk_size"<<chunk_size<<endl;
-            cout<<"end"<<end<<endl;
-            cout<<"chunked_len"<<chunked_len<<endl;
-            cout<<requests->body_length<<endl;
+
+//            cout<<"chunk_size"<<chunk_size<<endl;
+//            cout<<"end"<<end<<endl;
+//            cout<<"chunked_len"<<chunked_len<<endl;
+//            cout<<requests->body_length<<endl;
+
             string _str;
-            str += string(requests->body.begin()+stara+chunked_len, requests->body.begin() +end);
+            str += string(requests->body,stara+chunked_len,chunk_size);
             cout<<strlen(str.c_str())<<endl;
             stara=end;
         }
@@ -132,12 +134,12 @@ int Cparser::chunked(char *buf,int len,int &chunked_len)
 
 }
 
-bool Cparser::get_requests_head(char *req)
+bool Cparser::get_requests_head(string &req,int ret)
 {
     //这个函数用来查找到\r\n\r\n的位置，取到head；
     //
     char flag[5] = "\r\n\r\n";
-    int req_lent = strlen(req);
+    int req_lent = ret;
     int flag_lent = strlen(flag);
     int i=0;
     bool _return=false;
@@ -149,7 +151,7 @@ bool Cparser::get_requests_head(char *req)
             break;
         }
     }
-    string first_head=string(req,req+i);
+    string first_head=string(req,0,i);
     cmatch st;
     regex regex_head("(\\S+) (\\S+) (\\S+)");
     if(regex_match(first_head.c_str(),st,regex_head))
@@ -164,14 +166,14 @@ bool Cparser::get_requests_head(char *req)
 
     i+=2; //跳过/r/n
     int start=i;
-    regex regex_headers("(\\S+): (\\S+)");
+    regex regex_headers("(\\S+): (.*?)");
     for (; i < req_lent; i++)
     {
         requests->headers_str+=req[i];
         if(req[i]=='\r'&&req[i+1]=='\n')
         {
 
-            string str=string(req+start,req+i);
+            string str=string(req,start,i-start);
             //正则匹配headers
             if(regex_match(str.c_str(),st,regex_headers))
             {
@@ -196,10 +198,10 @@ bool Cparser::get_requests_head(char *req)
     if(requests->headers_length<req_lent)
     {
 
-        for(int i=requests->headers_length;i<req_lent-1;i++)
-        {
-            requests->body+=req[i];
-        }
+
+
+        requests->body=string(req,requests->headers_length,req_lent-requests->headers_length);
+
         requests->body_length=req_lent-requests->headers_length;
 
     }
