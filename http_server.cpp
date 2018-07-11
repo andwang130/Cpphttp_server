@@ -183,6 +183,7 @@ void Cserver::server_recv(int coon)
     }
     cout<<"****************"<<endl;
     cout<<parser->requests->url<<endl;
+
     Application *app=new Application;
     app->set_requtest(parser->requests);
     app->implemen();

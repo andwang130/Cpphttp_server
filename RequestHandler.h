@@ -10,16 +10,28 @@
 #include <iostream>
 #include "my_http_parser.h"
 #include <map>
+#include <vector>
 using namespace std;
+struct Fies{
+    string name;
+    string type;
+    string data;
+};
 class BaseHandler
 {
 
 protected:
     bool data_flage= false;
     map<string,string> map_data;
+    vector<Fies*> FIES;
+    string boundary;
+    int boundary_size;
     void _get_argument__foram_data();
     void _get_argument_json();
     void _get_argument_form_urlencoded();
+    void get_Content_Disposition(int &len,int x);
+    void get_files_Disposition(int &len);
+    bool juge_end(int len);
     string get_argument(string key);
     string get_body();
     void wirte();
@@ -63,9 +75,9 @@ public:
 
     void post()
     {
-        cout<<requests->headers_str<<endl;
-       cout<<requests->body<<endl;
-      cout<< get_argument("sdsdsd")<<endl;
+        //cout<<requests->headers_str<<endl;
+       //cout<<requests->body<<endl;
+      cout<< "get_argument"<<get_argument("sdsdsd")<<endl;
     }
     void init()
     {

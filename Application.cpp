@@ -4,9 +4,14 @@
 #include "RequestHandler.h"
 #include "Application.h"
 #include <regex>
+Application:: Application()
+{
+    handler=nullptr;
+}
 Application::~Application()
 {
-    if(handler!= nullptr)
+    cout<<"析苟application"<<endl;
+    if(handler!=nullptr)
     {
         delete handler;
     }
@@ -27,13 +32,13 @@ bool Application::path(char *url)
     }
 char * Application::implemen()
 {
-    handler=Route();
-    handler->requests=requests;
+
+    Route();
     if(handler== nullptr)
     {
         cout<<"404"<<endl;
     }
-    if(requests->method=="GET")
+    else if(requests->method=="GET")
     {
         handler->get();
     }
@@ -41,8 +46,8 @@ char * Application::implemen()
     {
         handler->post();
     }
-
-
+    char *str="404";
+    return str;
 }
 
 
@@ -52,3 +57,8 @@ void Application::set_requtest(Requests *requests1)
 
 }
 
+void Application::set_BaseHandler(BaseHandler *base) {
+    handler = base;
+    handler->requests = requests;
+
+}

@@ -4,18 +4,19 @@ using namespace std;
 #include <string.h>
 #include "http_server.h"
 #include "Application.h"
-BaseHandler * Application::Route()
+void Application::Route()
 {
     if(path("/baidu"))
     {
         BaseHandler *base1=new loginHandel;
-        return base1;
+        set_BaseHandler(base1);
     }
     else if(path("/desgin"))
     {
         BaseHandler *design=new desingnhandel;
-        return  design;
+        set_BaseHandler(design);
     }
+
 }
 int main()
 {

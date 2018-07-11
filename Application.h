@@ -13,12 +13,14 @@ private:
     BaseHandler *handler;
     Requests *requests;
     bool path(char *url);
-
-    BaseHandler * Route();
+    void set_BaseHandler(BaseHandler *base);
+    void Route();
 public:
     ~Application();
+    Application();
     void set_requtest(Requests *requests1);
     char * implemen();
+
 
 
 };
