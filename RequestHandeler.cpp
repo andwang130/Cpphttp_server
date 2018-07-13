@@ -85,10 +85,21 @@ bool BaseHandler::juge_end(int len)
         return false;
     }
 }
+bool BaseHandler::juge_end2(int len)
+{
+    int num=len+2+boundary_size;
+    if(string(requests->body,len+2,boundary_size)==boundary&&requests->body[num]=='\r'&&requests->body[num+1]=='\n')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 void BaseHandler::get_files_Disposition(int &len,int x)
 {
     string file_key(requests->body,len+1,x-len-2);
-    cout<<file_key<<endl;
     len=x+11;
     int stara=len;
     for(;len<requests->body.size();len++) {
@@ -124,9 +135,9 @@ void BaseHandler::get_files_Disposition(int &len,int x)
     }
     len+=2;
     string files(requests->body,stara,len-stara-1);
-    cout<<filename<<endl;
-    cout<<filetype<<endl;
-    //cout<<files<<endl;
+//    cout<<filename<<endl;
+//    cout<<filetype<<endl;
+//    cout<<files<<endl;
     Fies My_fies;
     My_fies.name=filename;
     My_fies.type=filetype;
@@ -143,7 +154,7 @@ void BaseHandler::_get_argument__foram_data()
     int i=0;
     while (i<requests->body.size())
     {
-        if(juge_end(i)) {
+        if(juge_end2(i)) {
             i += boundary_size + 2 + 37+2;
             for (int x = i; x < body_size; x++) {
                 if (requests->body[x] == '\r' && requests->body[x+1] == '\n') {
@@ -214,13 +225,23 @@ string BaseHandler::get_body()
     return requests->body;
 }
 
-
 //*********************************
 void BaseHandler::set_headers(string first,string sucode)
 {
     reqspone.headers[first]=sucode;
 }
-void BaseHandler::set_status(int code)
+void BaseHandler::set_status(string code)
 {
     reqspone.status_code=code;
+}
+void BaseHandler::set_cookies(string key, string val)
+{
+    reqspone.cookies[key]=val;
+}
+//***********************************
+
+//**********************************
+void BaseHandler::wirte(char *str)
+{
+    reqspone.body=str;
 }

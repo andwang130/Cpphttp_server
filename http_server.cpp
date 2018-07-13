@@ -187,11 +187,19 @@ void Cserver::server_recv(int coon)
     Application *app=new Application;
     app->set_requtest(parser->requests);
     app->implemen();
+    string resp=app->response_body();
+    cout<<resp<<endl;
+    if(send(coon,resp.c_str(),resp.size(),0)==-1)
+    {   cout<<"send"<<strerror(errno)<<endl;
+        close_socket(coon);
+    }
+
     delete app;
     delete parser;
     int64_t end_times=getCurrentTime();
     cout<<end_times-stara_time<<endl;
     cout<<end_times<<endl;
+    close_socket(coon);
 }
 void Cserver::run()
 {

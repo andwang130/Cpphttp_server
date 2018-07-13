@@ -19,15 +19,16 @@ struct Fies{
     string data;
 };
 struct Response{
-    int status_code;
+    string status_code;
     map<string,string>headers;
+    map<string,string>cookies;
     string body;
 
 };
 class BaseHandler
 {
 protected:
-    Response reqspone;
+
     bool data_flage= false;
     map<string,string> map_data;
     vector<Fies> FIES;
@@ -40,23 +41,25 @@ protected:
     void get_Content_Disposition(int &len,int x);
     void get_files_Disposition(int &len,int x);
     bool juge_end(int len);
+    bool juge_end2(int len);
     string get_argument(string key);
     //************************
 
     //*********设置reqspone*******
     void set_headers(string first,string sucode);
-    void set_status(int code);
+    void set_status(string code);
+    void set_cookies(string key,string val);
     //****************************
     string get_body();
-    void wirte();
+    void wirte(char *str);
 
 public:
     Requests *requests;
+    Response reqspone;
     void set_requtest(Requests *requests1)
     {
         requests=requests1;
     }
-    string a;
     virtual ~BaseHandler()
     {
 
@@ -90,8 +93,10 @@ public:
     void post()
     {
         //cout<<requests->headers_str<<endl;
-       cout<<requests->body<<endl;
-      cout<< "get_argument"<<get_argument("action")<<endl;
+       //cout<<requests->body<<endl;
+      cout<<"get_argument"<<get_argument("action")<<endl;
+      set_status("200");
+      wirte("wwwwwwwwwwwwwwwwwww");
     }
     void init()
     {

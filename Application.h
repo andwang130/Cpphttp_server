@@ -19,7 +19,8 @@ public:
     ~Application();
     Application();
     void set_requtest(Requests *requests1);
-    char * implemen();
+    void  implemen();
+    string response_body();
 
 
 
