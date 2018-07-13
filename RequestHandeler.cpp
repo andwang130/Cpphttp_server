@@ -56,7 +56,7 @@ string get_boundary(string Content_Type)
 void BaseHandler::get_Content_Disposition(int &len,int x)
 {
     string first(requests->body, len + 1, x-len-2);
-    cout<<first<<endl;
+    //cout<<first<<endl;
     len = x + 4;
     int stara=len;
     for(;len<requests->body.size();len++)
@@ -68,14 +68,14 @@ void BaseHandler::get_Content_Disposition(int &len,int x)
 
     }
     string content(requests->body,stara,len-stara);
-    cout<<content<<endl;
+    //cout<<content<<endl;
     len+=2;
     map_data[first]=content;
 
 }
 bool BaseHandler::juge_end(int len)
 {
-    cout<<string(requests->body,len+2,boundary_size)<<endl;
+
     if(string(requests->body,len+2,boundary_size)==boundary)
     {
         return true;
@@ -85,10 +85,11 @@ bool BaseHandler::juge_end(int len)
         return false;
     }
 }
-void BaseHandler::get_files_Disposition(int &len)
+void BaseHandler::get_files_Disposition(int &len,int x)
 {
-
-    len+=13;
+    string file_key(requests->body,len+1,x-len-2);
+    cout<<file_key<<endl;
+    len=x+11;
     int stara=len;
     for(;len<requests->body.size();len++) {
         if (requests->body[len] == '\r' || requests->body[len + 1] == '\n') {
@@ -125,17 +126,18 @@ void BaseHandler::get_files_Disposition(int &len)
     string files(requests->body,stara,len-stara-1);
     cout<<filename<<endl;
     cout<<filetype<<endl;
-    cout<<files<<endl;
-    Fies *My_fies=new Fies;
-    My_fies->name=filename;
-    My_fies->type=filetype;
-    My_fies->data=files;
+    //cout<<files<<endl;
+    Fies My_fies;
+    My_fies.name=filename;
+    My_fies.type=filetype;
+    My_fies.data=files;
+    My_fies.key=file_key;
     FIES.push_back(My_fies);
 
 }
 void BaseHandler::_get_argument__foram_data()
 {
-     boundary=get_boundary(requests->headers["Content-Type"]);
+    boundary=get_boundary(requests->headers["Content-Type"]);
     boundary_size=boundary.size();
     int body_size=requests->body.size();
     int i=0;
@@ -151,7 +153,7 @@ void BaseHandler::_get_argument__foram_data()
 
                 }
                 if (requests->body[x] == ';') {
-                    get_files_Disposition(i);
+                    get_files_Disposition(i,x);
                     break;
 
 
@@ -194,22 +196,31 @@ bool re_form_data(string &type)
 }
 string BaseHandler::get_argument(string key)
 {
-    cout<<requests->headers["Content-Type"]<<endl;
-    if(data_flage==false)
-    {
-        if (requests->headers["Content-Type"] == "application/x-www-form-urlencoded")
-        {
-             _get_argument_form_urlencoded();
-        } else if (requests->headers["Content-Type"] == "application/json")
-        {
+    //cout<<requests->headers["Content-Type"]<<endl;
+    if(data_flage==false&&requests->headers["Content-Type"] == "application/x-www-form-urlencoded") {
 
-        } else if (re_form_data(requests->headers["Content-Type"]))
-        {
-            _get_argument__foram_data();
-        } else if (requests->headers["Content-Type"] == "text/xml") {
-
-        }
+        _get_argument_form_urlencoded();
     }
+    else if(data_flage==false&&re_form_data(requests->headers["Content-Type"]))
+    {
+        _get_argument__foram_data();
+    }
+
     return map_data[key];
 
+}
+string BaseHandler::get_body()
+{
+    return requests->body;
+}
+
+
+//*********************************
+void BaseHandler::set_headers(string first,string sucode)
+{
+    reqspone.headers[first]=sucode;
+}
+void BaseHandler::set_status(int code)
+{
+    reqspone.status_code=code;
 }
