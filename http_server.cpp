@@ -6,6 +6,7 @@
 #include "my_http_parser.h"
 #include "Application.h"
 #include<sys/time.h>
+#include "MyException.h"
 int64_t getCurrentTime()      //直接调用这个函数就行了，返回值最好是int64_t，long long应该也可以
 {
     struct timeval tv;
@@ -183,11 +184,26 @@ void Cserver::server_recv(int coon)
     }
     cout<<"****************"<<endl;
     cout<<parser->requests->url<<endl;
+    string resp;
+    Application *app = new Application;
+    try {
 
-    Application *app=new Application;
-    app->set_requtest(parser->requests);
-    app->implemen();
-    string resp=app->response_body();
+
+        app->set_requtest(parser->requests);
+        app->implemen();
+        resp = app->response_body();
+    }
+    catch (MyException & e)
+    {
+     resp=e.what();
+    }
+    catch (...)
+    {
+        resp="HTTP/1.1 500 OK";
+
+    }
+
+
     cout<<resp<<endl;
     if(send(coon,resp.c_str(),resp.size(),0)==-1)
     {   cout<<"send"<<strerror(errno)<<endl;

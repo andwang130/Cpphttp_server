@@ -4,6 +4,7 @@
 #include "RequestHandler.h"
 #include "Application.h"
 #include <regex>
+#include "umit.h"
 Application:: Application()
 {
     handler=nullptr;
@@ -47,30 +48,26 @@ void Application::implemen()
         handler->post();
     }
 }
-string get_time()
+
+void Application::response_404(string &str)
 {
-    time_t timep;
-    time (&timep);
-    char tmp[64];
-    strftime(tmp, sizeof(tmp), "%a, %d %b %Y %H:%M:%S GMT",localtime(&timep) );
-    return tmp;
+    str="HTTP/1.1 404 OK\r\n";
+    string Gtm_time=umit::get_time();
+    str+="Date: "+Gtm_time+"\r\n";
+    str+="\r\n";
 }
 string Application::response_body()
 {
     string app_response;
     if(handler== nullptr)
     {
-        app_response="HTTP/1.1 404 OK\r\n";
+        response_404(app_response);
         return app_response;
     }
     else
     {
 
         app_response="HTTP/1.1 "+handler->reqspone.status_code+" OK\r\n";
-
-        app_response+="Content-Type: text/html; charset=UTF-8\r\n";
-        string Gtm_time=get_time();
-        app_response+="Date: "+Gtm_time+"\r\n";
         map<string,string>::iterator ite;
         for(ite=handler->reqspone.headers.begin();ite!=handler->reqspone.headers.end();ite++)
         {
@@ -85,7 +82,6 @@ string Application::response_body()
         if(!handler->reqspone.body.empty()) {
             app_response += handler->reqspone.body;
         }
-
 
     }
     return app_response;

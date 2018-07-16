@@ -2,7 +2,9 @@
 // Created by meidai on 18-7-10.
 //
 #include"RequestHandler.h"
-
+#include <fstream>
+#include "MyException.h"
+#include <string.h>
 void BaseHandler::_get_argument_form_urlencoded()
 {
     int size=requests->body.size();
@@ -244,4 +246,46 @@ void BaseHandler::set_cookies(string key, string val)
 void BaseHandler::wirte(char *str)
 {
     reqspone.body=str;
+}
+//********************************
+void BaseHandler::render(string path)
+{
+    ifstream fs(path);
+    char buff[1024];
+    if(!fs.is_open()) {
+        cout << "render eero" << endl;
+        throw MyException(1024);
+
+    }
+    while(!fs.eof())
+    {
+
+        memset(buff,0,1024);
+        fs.getline(buff,1024);
+        reqspone.body+=buff;
+    }
+    fs.close();
+
+}
+
+//********************************
+
+
+void BaseHandler::redirect(string url)
+{
+    reqspone.headers["Location"]=url;
+    reqspone.status_code="301";
+
+}
+BaseHandler::BaseHandler()
+{
+    reqspone.headers["Content-Type"]="text/html; charset=UTF-8";
+    string Gtm_time=umit::get_time();
+    reqspone.headers["Date"]=Gtm_time;
+
+}
+
+void BaseHandler::set_requtest(Requests *requests1)
+{
+    requests=requests1;
 }

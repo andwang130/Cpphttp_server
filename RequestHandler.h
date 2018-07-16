@@ -7,6 +7,7 @@
 
 #endif //UNTITLED5_REQUESTHANDLER_HC
 
+#include <mysql/mysql.h>
 #include <iostream>
 #include "my_http_parser.h"
 #include <map>
@@ -50,16 +51,21 @@ protected:
     void set_status(string code);
     void set_cookies(string key,string val);
     //****************************
+
+    //**************render******
+    void render(string path);
+    //**************************
+
+    void redirect(string url);
     string get_body();
     void wirte(char *str);
 
 public:
     Requests *requests;
     Response reqspone;
-    void set_requtest(Requests *requests1)
-    {
-        requests=requests1;
-    }
+    BaseHandler();
+    void set_requtest(Requests *requests1);
+
     virtual ~BaseHandler()
     {
 
@@ -98,6 +104,13 @@ public:
       set_status("200");
       wirte("wwwwwwwwwwwwwwwwwww");
     }
+    void get()
+    {
+        cout<<"get_argument"<<get_argument("action")<<endl;
+        set_status("200");
+        redirect("/desgin");
+        //render("/home/meidai/桌面/len.htmdl");
+    }
     void init()
     {
         cout<<"init"<<endl;
@@ -117,7 +130,7 @@ public:
     }
     void get()
     {
-        cout<<requests->body<<endl;
+        render("/home/meidai/桌面/len.htmdl");
     }
 
 

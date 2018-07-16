@@ -15,6 +15,7 @@ private:
     bool path(char *url);
     void set_BaseHandler(BaseHandler *base);
     void Route();
+    void response_404(string &str);
 public:
     ~Application();
     Application();

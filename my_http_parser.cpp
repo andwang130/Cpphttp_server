@@ -3,7 +3,7 @@
 //
 #include "my_http_parser.h"
 #include <regex>
-#include <math.h>
+#include "umit.h"
 Cparser::Cparser()
 {
     requests=new Requests;
@@ -53,25 +53,7 @@ bool Cparser::chunked_analysis(char *req,int ret)
 
 }
 
-int  hex2num(string s) {
-    int count = s.length();
-    int sum = 0;
-    for (int i = count - 1; i >= 0; i--)//从十六进制个位开始，每位都转换成十进制
-    {
-        if (s[i] >= '0' && s[i] <= '9')//数字字符的转换
-        {
-            sum += (s[i] - 48) * pow(16, count - i - 1);
-        } else if (s[i] >= 'A' && s[i] <= 'F')//字母字符的转换
-        {
-            sum += (s[i] - 55) * pow(16, count - i - 1);
-        }
-        else if (s[i] >= 'a' && s[i] <= 'f')//字母字符的转换
-        {
-            sum += (s[i] - 87) * pow(16, count - i - 1);
-        }
-    }
-    return sum;
-}
+
 int Cparser::get_first_chunked_size()
 {
         string str;
@@ -128,7 +110,7 @@ int Cparser::chunked(char *buf,int len,int &chunked_len)
         }
 
         chunked_len+=2;
-        return hex2num(str);
+        return umit::hex2num(str);
 
 
 

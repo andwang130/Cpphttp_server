@@ -4,6 +4,7 @@ using namespace std;
 #include <string.h>
 #include "http_server.h"
 #include "Application.h"
+#include "MysqlDB.h"
 void Application::Route()
 {
     if(path("/baidu"))
@@ -20,6 +21,7 @@ void Application::Route()
 }
 int main()
 {
+    //cppMysql cppmysql("127.0.0.1",)
 
 Server_info server_info;
 server_info.ip="127.0.0.1";
