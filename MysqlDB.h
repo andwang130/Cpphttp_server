@@ -8,14 +8,24 @@
 #endif //UNTITLED5_MYSQLDB_H
 
 #include <mysql/mysql.h>
+#include <iostream>
+#include <vector>
+using namespace std;
 class cppMysql
 {
 private:
+
     MYSQL *_mysql;
     MYSQL_RES *result= NULL;
 public:
     cppMysql(const char *host,const char *user, const char *passwd, const char *db, unsigned int port);
-    void select(char *sql);
+    vector<vector<char *>> Select(char *sql);
+    int Insert(char *sql);
+    int Delete(char *sql);
+    int Update(char *sql);
     int create_db(char * dbname);
+    int transaction();
+    int commit();//提交事务
+    int RollBack();//回滚
 
 };
