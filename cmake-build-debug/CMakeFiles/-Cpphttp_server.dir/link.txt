@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/-Cpphttp_server.dir/mian.cpp.o CMakeFiles/-Cpphttp_server.dir/http_server.cpp.o CMakeFiles/-Cpphttp_server.dir/my_http_parser.cpp.o CMakeFiles/-Cpphttp_server.dir/Application.cpp.o CMakeFiles/-Cpphttp_server.dir/RequestHandeler.cpp.o CMakeFiles/-Cpphttp_server.dir/umit.cpp.o CMakeFiles/-Cpphttp_server.dir/MysqlDB.cpp.o  -o -Cpphttp_server 

@@ -13,10 +13,48 @@
   <component name="ChangeListManager">
     <list default="true" id="74add175-4ed7-407c-aa67-33ddafe612dc" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MysqlDB.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MysqlDB.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MysqlDB.h" beforeDir="false" afterPath="$PROJECT_DIR$/MysqlDB.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyException.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MysqlDB.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MysqlDB.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RequestHandeler.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RequestHandler.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/-Cpphttp_server.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/-Cpphttp_server.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/-Cpphttp_server.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/-Cpphttp_server.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/-Cpphttp_server.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/-Cpphttp_server.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/-Cpphttp_server.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.2/CMakeSystem.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.10.2/CMakeSystem.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/Application.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/CXX.includecache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/MysqlDB.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/RequestHandeler.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/depend.internal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/http_server.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/mian.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/my_http_parser.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Cpphttp_server.dir/umit.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Cpphttp_server" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/untitled5.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/untitled5.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http_server.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/http_server.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libmysqlclient.so" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/mian.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/mian.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/my_http_parser.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my_http_parser.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/umit.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/umit.h" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,65 +67,39 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MysqlDB.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/MysqlDB.h">
+      <file leaf-file-name="RequestHandeler.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/RequestHandeler.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-              <folding>
-                <element signature="e#127#151#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="98">
+              <caret line="282" selection-start-line="282" selection-end-line="282" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MysqlDB.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/MysqlDB.cpp">
+      <file leaf-file-name="MysqlDB.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/MysqlDB.h">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="MyException.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/MyException.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="45" column="9" lean-forward="true" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+            <state relative-caret-position="53">
+              <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="my_http_parser.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/my_http_parser.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="123" column="23" selection-start-line="123" selection-start-column="23" selection-end-line="123" selection-end-column="23" />
-              <folding>
-                <element signature="e#38#65#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="45" selection-start-line="8" selection-start-column="45" selection-end-line="8" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mysql.h" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/include/mysql/mysql.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-233">
-              <caret line="392" column="38" lean-forward="true" selection-start-line="392" selection-start-column="38" selection-end-line="392" selection-end-column="38" />
-              <folding>
-                <element signature="e#1670#1696#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/serever/my_http_parser.cpp">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="mian.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mian.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="26" column="5" lean-forward="true" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
+            <state relative-caret-position="210">
+              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
               <folding>
                 <element signature="e#41#60#0" expanded="true" />
               </folding>
@@ -95,41 +107,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Application.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Application.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="17" column="21" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="21" />
-            </state>
-          </provider>
+      <file leaf-file-name="my_http_parser.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/my_http_parser.h">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="MyException.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/MyException.h">
+      <file leaf-file-name="http_server.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/http_server.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="17" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Application.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Application.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
-              <caret line="85" column="5" selection-start-line="85" selection-start-column="5" selection-end-line="85" selection-end-column="5" />
+            <state relative-caret-position="-352">
               <folding>
-                <element signature="e#38#65#0" expanded="true" />
+                <element signature="e#0#22#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="umit.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/umit.cpp">
+      <file leaf-file-name="http_server.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/http_server.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
+            <state relative-caret-position="15">
+              <caret line="57" column="14" selection-start-line="57" selection-start-column="14" selection-end-line="57" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Application.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/Application.h">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="Application.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serever/Application.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="263">
+              <caret line="125" column="18" selection-start-line="125" selection-start-column="18" selection-end-line="125" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -173,17 +185,19 @@
         <option value="$PROJECT_DIR$/my_http_parser.h" />
         <option value="$PROJECT_DIR$/Application.h" />
         <option value="$PROJECT_DIR$/my_http_parser.cpp" />
-        <option value="$PROJECT_DIR$/Application.cpp" />
         <option value="$PROJECT_DIR$/MyException.h" />
         <option value="$PROJECT_DIR$/umit.h" />
         <option value="$PROJECT_DIR$/umit.cpp" />
         <option value="$PROJECT_DIR$/http_server.cpp" />
-        <option value="$PROJECT_DIR$/RequestHandeler.cpp" />
-        <option value="$PROJECT_DIR$/RequestHandler.h" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/MysqlDB.h" />
         <option value="$PROJECT_DIR$/MysqlDB.cpp" />
+        <option value="$PROJECT_DIR$/RequestHandler.h" />
+        <option value="$PROJECT_DIR$/RequestHandeler.cpp" />
+        <option value="$PROJECT_DIR$/Application.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/mian.cpp" />
+        <option value="$PROJECT_DIR$/serever/RequestHandeler.cpp" />
+        <option value="$PROJECT_DIR$/serever/RequestHandler.h" />
       </list>
     </option>
   </component>
@@ -241,7 +255,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Cpphttp_server">
+  <component name="RunManager" selected="Application.Build All">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="untitled5" RUN_TARGET_NAME="Cpphttp_server" EXPLICIT_BUILD_TARGET_NAME="all" />
     <configuration name="Cpphttp_server" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="untitled5" TARGET_NAME="Cpphttp_server" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="untitled5" RUN_TARGET_NAME="Cpphttp_server" />
     <list>
@@ -280,11 +294,14 @@
       <workItem from="1531707736036" duration="9695000" />
       <workItem from="1531724367286" duration="9358000" />
       <workItem from="1531790959289" duration="11376000" />
+      <workItem from="1532412161671" duration="939000" />
+      <workItem from="1532417354949" duration="764000" />
+      <workItem from="1532586321390" duration="6177000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="166362000" />
+    <option name="totallyTimeSpent" value="174242000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -298,10 +315,10 @@
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1303" height="780" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25234374" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25234374" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3431677" />
       <window_info anchor="bottom" id="Messages" order="7" weight="0.33850932" />
-      <window_info anchor="bottom" id="CMake" order="7" weight="0.32763976" />
+      <window_info anchor="bottom" id="CMake" order="7" weight="0.30279502" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32919255" />
@@ -356,100 +373,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/http-parser/test.c" />
-    <entry file="file://$PROJECT_DIR$/http_server.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="20" lean-forward="true" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mian.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="14" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/x86_64-linux-gnu/sys/epoll.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1545">
-          <caret line="103" column="11" selection-start-line="103" selection-start-column="11" selection-end-line="103" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RequestHandler.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/http_server.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2700">
-          <caret line="180" column="32" selection-start-line="180" selection-start-column="28" selection-end-line="180" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/http_server.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/x86_64-linux-gnu/sys/socket.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3630">
-          <caret line="242" column="36" selection-start-line="242" selection-start-column="36" selection-end-line="242" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RequestHandler.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="41" selection-start-line="5" selection-start-column="41" selection-end-line="5" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/http_server.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1830">
-          <caret line="122" column="19" lean-forward="true" selection-start-line="122" selection-start-column="19" selection-end-line="122" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/http_server.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/x86_64-linux-gnu/sys/socket.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3630">
-          <caret line="242" column="36" selection-start-line="242" selection-start-column="36" selection-end-line="242" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/RequestHandler.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -562,23 +485,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/http_server.h">
+    <entry file="file:///usr/include/mysql/mysql_version.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="43" column="2" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="43">
+          <caret line="14" column="37" lean-forward="true" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_http_parser.h">
+    <entry file="file:///usr/include/mysql/mysql_time.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-          <folding>
-            <element signature="e#159#178#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-542" />
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/mysql/mysql.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5880">
+          <caret line="392" column="38" selection-start-line="392" selection-start-column="38" selection-end-line="392" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/umit.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -592,65 +521,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/http_server.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="43" column="2" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MyException.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MysqlDB.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding>
+            <element signature="e#127#151#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/http_server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+        <state relative-caret-position="381">
+          <caret line="193" column="28" selection-start-line="193" selection-start-column="28" selection-end-line="193" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/RequestHandeler.cpp">
+    <entry file="file://$PROJECT_DIR$/my_http_parser.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4185">
-          <caret line="279" column="26" selection-start-line="279" selection-start-column="26" selection-end-line="279" selection-end-column="26" />
+        <state relative-caret-position="132">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
           <folding>
-            <element signature="e#39#65#0" expanded="true" />
+            <element signature="e#159#178#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/RequestHandler.h">
+    <entry file="file://$PROJECT_DIR$/MysqlDB.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="e#160#184#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="480">
+          <caret line="41" column="22" lean-forward="true" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/umit.cpp">
+    <entry file="file://$PROJECT_DIR$/my_http_parser.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/mysql/mysql_version.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="43">
-          <caret line="14" column="37" lean-forward="true" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/mysql/mysql_time.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-542" />
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/mysql/mysql/client_plugin.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#956#975#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="85" column="5" selection-start-line="85" selection-start-column="5" selection-end-line="85" selection-end-column="5" />
+        <state relative-caret-position="-1395">
+          <caret line="124" column="33" selection-start-line="124" selection-start-column="32" selection-end-line="124" selection-end-column="33" />
           <folding>
             <element signature="e#38#65#0" expanded="true" />
           </folding>
@@ -659,66 +584,122 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Application.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
+        <state relative-caret-position="255">
           <caret line="17" column="21" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="21" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/Application.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="45" selection-start-line="8" selection-start-column="45" selection-end-line="8" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/mysql/mysql.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-233">
-          <caret line="392" column="38" lean-forward="true" selection-start-line="392" selection-start-column="38" selection-end-line="392" selection-end-column="38" />
-          <folding>
-            <element signature="e#1670#1696#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MyException.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MysqlDB.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-          <folding>
-            <element signature="e#127#151#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MysqlDB.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="45" column="9" lean-forward="true" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_http_parser.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="123" column="23" selection-start-line="123" selection-start-column="23" selection-end-line="123" selection-end-column="23" />
+        <state relative-caret-position="291">
+          <caret line="103" column="58" selection-start-line="103" selection-start-column="58" selection-end-line="103" selection-end-column="58" />
           <folding>
             <element signature="e#38#65#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/RequestHandeler.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="244" column="23" lean-forward="true" selection-start-line="244" selection-start-column="23" selection-end-line="244" selection-end-column="23" />
+          <folding>
+            <element signature="e#39#65#0" expanded="true" />
+            <element signature="e#130#1198#0" />
+            <element signature="e#1199#1326#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RequestHandler.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding>
+            <element signature="e#160#184#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/umit.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/MysqlDB.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="29" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/umit.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/RequestHandler.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="161" lean-forward="true" selection-start-line="161" selection-end-line="161" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/RequestHandeler.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="98">
+          <caret line="282" selection-start-line="282" selection-end-line="282" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/MysqlDB.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/http_server.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-352">
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/http_server.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="57" column="14" selection-start-line="57" selection-start-column="14" selection-end-line="57" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/Application.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/Application.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="125" column="18" selection-start-line="125" selection-start-column="18" selection-end-line="125" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/my_http_parser.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/my_http_parser.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serever/MyException.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="53">
+          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mian.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="26" column="5" lean-forward="true" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
+        <state relative-caret-position="210">
+          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
           <folding>
             <element signature="e#41#60#0" expanded="true" />
           </folding>

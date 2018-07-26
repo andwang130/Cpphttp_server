@@ -2,12 +2,12 @@
 using namespace std;
 
 #include <string.h>
-#include "http_server.h"
-#include "Application.h"
-#include "MysqlDB.h"
+#include "serever/http_server.h"
+#include "serever/Application.h"
+#include "serever/MysqlDB.h"
 void Application::Route()
 {
-    if(path("/baidu"))
+    if(path("/douyu"))
     {
         BaseHandler *base1=new loginHandel;
         set_BaseHandler(base1);
@@ -21,17 +21,22 @@ void Application::Route()
 }
 int main()
 {
-    cppMysql cppmysql("127.0.0.1","root","wangjing123","newdb",3306);
-    auto ve=cppmysql.Select("select * from wang");
-    for(vector<char *> v:ve)
-    {
-        cout<<v[0]<<endl;
-    }
-//Server_info server_info;
-//server_info.ip="127.0.0.1";
-//server_info.port=8800;
-//Cserver cserver(server_info);
-//cserver.run();
+//    cppMysql cppmysql("127.0.0.1","root","wangjing123","newdb",3306);
+//    auto ve=cppmysql.Select("select * from wang");
+//    for(vector<char *> v:ve)
+//    {
+//        for(char * v_char:v)
+//        {
+//            cout<<v_char<<' ';
+//        }
+//        cout<<endl;
+//
+//    }
+Server_info server_info;
+server_info.ip="127.0.0.1";
+server_info.port=8800;
+Cserver cserver(server_info);
+cserver.run();
 
 
 //    BaseHandler *base;
