@@ -4,7 +4,7 @@
 #include "my_websocket_parser.h"
 #include <string.h>
 #include<netinet/in.h>
-
+#include <map>
 int websocket_parser::wsEncodeFrame(string inMessage, string &outFrame, enum WS_FrameType frameType)
 {
     int ret = WS_EMPTY_FRAME;
@@ -47,8 +47,10 @@ int websocket_parser::wsEncodeFrame(string inMessage, string &outFrame, enum WS_
     delete[] frameHeader;
     return ret;
 }
-int websocket_parser::wsDecodeFrame(string inFrame, string &outMessage)
+int websocket_parser::get_lengt(string inFrame)
 {
+
+    struct WS_type oput_type;
     int ret = WS_OPENING_FRAME;
     const char *frameData = inFrame.c_str();
     const int frameLength = inFrame.size();
@@ -56,7 +58,6 @@ int websocket_parser::wsDecodeFrame(string inFrame, string &outMessage)
     {
         ret = WS_ERROR_FRAME;
     }
-
     // 检查扩展位并忽略
     if ((frameData[0] & 0x70) != 0x0)
     {
@@ -65,12 +66,15 @@ int websocket_parser::wsDecodeFrame(string inFrame, string &outMessage)
 
     // fin位: 为1表示已接收完整报文, 为0表示继续监听后续报文
     ret = (frameData[0] & 0x80);
+    oput_type.fin=ret;
     if ((frameData[0] & 0x80) != 0x80)
     {
+
         ret = WS_ERROR_FRAME;
     }
 
     // mask位, 为1表示数据被加密
+    oput_type.mask=frameData[1] & 0x80;
     if ((frameData[1] & 0x80) != 0x80)
     {
         ret = WS_ERROR_FRAME;
@@ -90,13 +94,20 @@ int websocket_parser::wsDecodeFrame(string inFrame, string &outMessage)
             payloadFieldExtraBytes = 2;
             memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
             payloadLength = ntohs(payloadLength16b);
+
         }
         else if (payloadLength == 0x7f)
         {
             // 数据过长,暂不支持
-            ret = WS_ERROR_FRAME;
+            uint16_t payloadLength16b = 0;
+            payloadFieldExtraBytes = 4;
+            memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
+            payloadLength = ntohs(payloadLength16b);
+
+
         }
     }
+
     else if (opcode == WS_BINARY_FRAME || opcode == WS_PING_FRAME || opcode == WS_PONG_FRAME)
     {
         // 二进制/ping/pong帧暂不处理
@@ -109,23 +120,128 @@ int websocket_parser::wsDecodeFrame(string inFrame, string &outMessage)
     {
         ret = WS_ERROR_FRAME;
     }
+    oput_type.payloadLength=payloadLength;
+    oput_type.opcode=opcode;
+    oput_type.payloadFieldExtraBytes=payloadFieldExtraBytes;
 
-    // 数据解码
-    if ((ret != WS_ERROR_FRAME) && (payloadLength > 0))
-    {
-        // header: 2字节, masking key: 4字节
-        const char *maskingKey = &frameData[2 + payloadFieldExtraBytes];
-        char *payloadData = new char[payloadLength + 1];
-        memset(payloadData, 0, payloadLength + 1);
-        memcpy(payloadData, &frameData[2 + payloadFieldExtraBytes + 4], payloadLength);
-        for (int i = 0; i < payloadLength; i++)
+}
+
+int websocket_parser::wsDecodeFrame(string inFrame, string &outMessage)
+{
+
+        struct WS_type ws_type;
+        int ret = WS_OPENING_FRAME;
+
+
+        const char *frameData = inFrame.c_str();
+        const int frameLength = inFrame.size();
+
+
+        if (frameLength < 2)
         {
-            payloadData[i] = payloadData[i] ^ maskingKey[i % 4];
+            ret = WS_ERROR_FRAME;
         }
 
-        outMessage = payloadData;
-        delete[] payloadData;
-    }
 
-    return ret;
-}
+        // 检查扩展位并忽略
+        if ((frameData[0] & 0x70) != 0x0)
+        {
+            ret = WS_ERROR_FRAME;
+        }
+
+
+        // fin位: 为1表示已接收完整报文, 为0表示继续监听后续报文
+        ret = (frameData[0] & 0x80);
+        ws_type.fin=ret;
+//        if ((frameData[0] & 0x80) != 0x80)
+//        {
+//            ret = WS_ERROR_FRAME;
+//        }
+
+
+        // mask位, 为1表示数据被加密
+        int mask=(frameData[1] & 0x80);
+//        if ((frameData[1] & 0x80) != 0x80)
+//        {
+//            ret = WS_ERROR_FRAME;
+//        }
+
+
+        // 操作码
+        uint16_t payloadLength = 0;
+        uint8_t payloadFieldExtraBytes = 0;
+        uint8_t opcode = static_cast<uint8_t>(frameData[0] & 0x0f);
+
+
+        if (opcode == WS_TEXT_FRAME)
+        {
+            // 处理utf-8编码的文本帧
+            payloadLength = static_cast<uint16_t>(frameData[1] & 0x7f);
+
+
+            if (payloadLength == 0x7e)
+            {
+                uint16_t payloadLength16b = 0;
+
+
+                payloadFieldExtraBytes = 2;
+
+
+                memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
+
+
+                payloadLength = ntohs(payloadLength16b);
+            }
+            else if (payloadLength == 0x7f)
+            {
+                // 数据过长,暂不支持
+                uint16_t payloadLength16b = 0;
+                payloadFieldExtraBytes = 4;
+                memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
+                payloadLength = ntohs(payloadLength16b);
+
+            }
+        }
+        else if (opcode == WS_BINARY_FRAME || opcode == WS_PING_FRAME || opcode == WS_PONG_FRAME)
+        {
+            // 二进制/ping/pong帧暂不处理
+        }
+        else if (opcode == WS_CLOSING_FRAME)
+        {
+            ret = WS_CLOSING_FRAME;
+        }
+        else
+        {
+            ret = WS_ERROR_FRAME;
+        }
+
+
+        // 数据解码
+        const char *maskingKey = &frameData[2 + payloadFieldExtraBytes];
+        char *payloadData = new char[payloadLength + 1];
+        if ((mask != 1) && (payloadLength > 0)) {
+            // header: 2字节, masking key: 4字节
+
+
+            memset(payloadData, 0, payloadLength + 1);
+            memcpy(payloadData, &frameData[2 + payloadFieldExtraBytes + 4], payloadLength);
+        }
+        else{
+
+            for (int i = 0; i < payloadLength; i++)
+            {
+                payloadData[i] = payloadData[i] ^ maskingKey[i % 4];
+            }
+
+
+        }
+        outMessage = payloadData;
+         delete[] payloadData;
+
+        int lent=2+payloadFieldExtraBytes+payloadLength-frameLength;
+         ws_type.mask=mask;
+         ws_type.payloadFieldExtraBytes=payloadFieldExtraBytes;
+         ws_type.payloadLength=payloadLength;
+         ws_type.lent=lent;
+        return ret;
+    }
