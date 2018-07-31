@@ -5,243 +5,174 @@
 #include <string.h>
 #include<netinet/in.h>
 #include <map>
-int websocket_parser::wsEncodeFrame(string inMessage, string &outFrame, enum WS_FrameType frameType)
+//https://github.com/BottleHe/c-demo/blob/master/websocket/websocket.c
+/**
+ +------------------------------------------------------------------------------
+ * @desc        	: 解析接收到的数据包
+ +------------------------------------------------------------------------------
+ * @access	      	: public
+ * @author	      	: bottle<bottle@fridayws.com>
+ * @since       	: 16-05-11
+ * @param       	: unsigned char* buf 接收到的数据内容
+ * @param           : size_t length 接收的数据长度
+ * @param           : WSHeader* 头部存放结构体
+ * @return      	: int 成功返回0
+ +------------------------------------------------------------------------------
+**/
+int parsePack(unsigned char* buf, size_t length, WSHeader* header)
 {
-    int ret = WS_EMPTY_FRAME;
-    const uint32_t messageLength = inMessage.size();
-    if (messageLength > 32767)
+    header->mark.fin = buf[0] >> 7;  // 或使用 buf[0] & 0x80
+    header->mark.rsv1 = buf[0] & 0x40;
+    header->mark.rsv2 = buf[0] & 0x20;
+    header->mark.rsv3 = buf[0] & 0x10;
+    header->mark.opcode = buf[0] & 0xF;
+    header->mark.mask = buf[1] >> 7;
+    header->mark.payloadlen = buf[1] & 0x7F;
+    header->headlength = 2;
+    header->reallength = header->mark.payloadlen;
+    if (header->mark.payloadlen == 126) // 如果payload length 值为 0x7E的话
     {
-        // 暂不支持这么长的数据
-        return WS_ERROR_FRAME;
+        UINT16 tmp16 = 0; // 我们使用后面的 2 个字节存放实际数据长度
+        memcpy(&tmp16, buf + 2, 2);
+        header->reallength = ntohs(tmp16);  // 网络字节序转本地字节序
+        header->headlength += 2;
     }
-
-    uint8_t payloadFieldExtraBytes = (messageLength <= 0x7d) ? 0 : 2;
-    // header: 2字节, mask位设置为0(不加密), 则后面的masking key无须填写, 省略4字节
-    uint8_t frameHeaderSize = 2 + payloadFieldExtraBytes;
-    uint8_t *frameHeader = new uint8_t[frameHeaderSize];
-    memset(frameHeader, 0, frameHeaderSize);
-    // fin位为1, 扩展位为0, 操作位为frameType
-    frameHeader[0] = static_cast<uint8_t>(0x80 | frameType);
-
-    // 填充数据长度
-    if (messageLength <= 0x7d)
+    else if (header->mark.payloadlen == 127) // 如果payload length 值为 0x7F的话
     {
-        frameHeader[1] = static_cast<uint8_t>(messageLength);
+        UINT64 tmp64 = 0; // 我们使用后续的 8 个字节存放实际数据长度
+        memcpy(&tmp64, buf + 2, 8);
+        header->reallength = ntohl(tmp64); // 网络字节序转本地字节序
+        header->headlength += 8;
+    }
+    memset(header->mask, 0, 4);
+    if (header->mark.mask)
+    {
+        memcpy(header->mask, buf + header->headlength, 4);
+        header->headlength += 4;
+    }
+    return 0;
+}
+
+/**
++------------------------------------------------------------------------------
+* @desc        	: 获取消息体
++------------------------------------------------------------------------------
+* @access	      	: public
+* @since       	: 16-05-17
+* @param       	: const int cfd client fd
+* @param           : const unsigned char* buf 消息buf
+* @param           : size_t bufsize 消息长度
+* @param           : unsigned char* container 获取到的消息体存放地址
+* @param           : const WSHeader* pHeader 头结构体地址
+* @return      	: int
++------------------------------------------------------------------------------
+**/
+int getPackPayloadData(const int cfd, const unsigned char* buf, size_t bufsize, unsigned char* container, const WSHeader* pHeader)
+{
+    memset(container, 0, pHeader->reallength + 1);
+    int readlength = 0;
+    int recvlength = 0;
+    int count = 0;
+    char *_buf = (char*)calloc(bufsize, sizeof(char)); // 动态分配足够大空间
+    if (pHeader->mark.mask) // 如果有掩码
+    {
+        readlength = bufsize - pHeader->headlength;
+        int x = 0;
+        memcpy(container, buf + pHeader->headlength, pHeader->reallength > readlength ? readlength : pHeader->reallength);
+        while(pHeader->reallength > readlength)
+        {
+            memset(_buf, 0, bufsize);
+            count = recv(cfd, _buf, bufsize, MSG_DONTWAIT);
+            recvlength = (pHeader->reallength - readlength) > bufsize ? bufsize : (pHeader->reallength - readlength);
+            memcpy(container + readlength, _buf, recvlength);
+            readlength += recvlength;
+        }
+        for (x = 0; x < pHeader->reallength; ++x)
+            *(container + x) ^= pHeader->mask[x % 4];
     }
     else
     {
-        frameHeader[1] = 0x7e;
-        uint16_t len = htons(messageLength);
-        memcpy(&frameHeader[2], &len, payloadFieldExtraBytes);
+        readlength = bufsize - pHeader->headlength;
+        memcpy(container, buf + pHeader->headlength, pHeader->reallength > readlength ? readlength : pHeader->reallength);
+        while(pHeader->reallength > readlength)
+        {
+            memset(_buf, 0, bufsize);
+            count = recv(cfd, _buf, bufsize, MSG_DONTWAIT);
+            recvlength = pHeader->reallength - readlength > bufsize ? bufsize : pHeader->reallength - readlength;
+            memcpy(container + readlength, _buf, recvlength);
+            readlength += recvlength;
+        }
     }
-
-    // 填充数据
-    uint32_t frameSize = frameHeaderSize + messageLength;
-    char *frame = new char[frameSize + 1];
-    memcpy(frame, frameHeader, frameHeaderSize);
-    memcpy(frame + frameHeaderSize, inMessage.c_str(), messageLength);
-    frame[frameSize] = '\0';
-    outFrame = frame;
-
-    delete[] frame;
-    delete[] frameHeader;
-    return ret;
+    free(_buf);
+    _buf = NULL;
+    return 0;
 }
-int websocket_parser::get_lengt(string inFrame)
+/**
+ +------------------------------------------------------------------------------
+ * @desc        	: 对发送数据打包
+ +------------------------------------------------------------------------------
+ * @author      	: Bottle<bottle.friday@gmail.com>
+ * @since       	: 2016-05-11
+ * @param       	: const unsigned char* message 需要发送的消息体
+ * @param           : size_t len 发送数据长度
+ * @param           : BYTE fin 是否是结束消息 (1 bit)
+ * @param           : BYTE opcode 消息类型(4 bit) 共15种类型
+ * @param           : BYTE mask (是否需要做掩码运算 1 bit)
+ * @param           : unsigned char** send 输出参数, 存放处理好的数据包
+ * @param           : size_t* slen 输出参数, 记录数据包的长度
+ * @return      	: int 成功返回0
+ +------------------------------------------------------------------------------
+**/
+int packData(const unsigned char* message, size_t len, BYTE fin, BYTE opcode, BYTE mask, unsigned char** send, size_t* slen)
 {
-
-    struct WS_type oput_type;
-    int ret = WS_OPENING_FRAME;
-    const char *frameData = inFrame.c_str();
-    const int frameLength = inFrame.size();
-    if (frameLength < 2)
+    int headLength = 0;
+    // 基本一个包可以发送完所有数据
+    *slen = len;
+    if (len < 126) // 如果不需要扩展长度位, 两个字节存放 fin(1bit) + rsv[3](1bit) + opcode(4bit); mask(1bit) + payloadLength(7bit);
+        *slen += 2;
+    else if (len < 0xFFFF) // 如果数据长度超过126 并且小于两个字节, 我们再用后面的两个字节(16bit) 表示 UINT16
+        *slen += 4;
+    else // 如果数据更长的话, 我们使用后面的8个字节(64bit)表示 UINT64
+        *slen += 8;
+    // 判断是否有掩码
+    if (mask & 0x1) // 判断是不是1
+        *slen += 4; // 4byte 掩码位
+    // 长度已确定, 现在可以重新分配内存
+    *send = (unsigned char*)realloc((void*)*send, *slen);
+    // 做数据设置
+    memset(*send, 0, *slen);
+    **send = fin << 7;
+    **send = **send | (0xF & opcode); //处理opcode
+    *(*send + 1) = mask << 7;
+    if (len < 126)
     {
-        ret = WS_ERROR_FRAME;
+        *(*send + 1) = *(*send + 1) | len;
+        //start += 2;
+        headLength += 2;
     }
-    // 检查扩展位并忽略
-    if ((frameData[0] & 0x70) != 0x0)
+    else if (len < 0xFFFF)
     {
-        ret = WS_ERROR_FRAME;
-    }
-
-    // fin位: 为1表示已接收完整报文, 为0表示继续监听后续报文
-    ret = (frameData[0] & 0x80);
-    oput_type.fin=ret;
-    if ((frameData[0] & 0x80) != 0x80)
-    {
-
-        ret = WS_ERROR_FRAME;
-    }
-
-    // mask位, 为1表示数据被加密
-    oput_type.mask=frameData[1] & 0x80;
-    if ((frameData[1] & 0x80) != 0x80)
-    {
-        ret = WS_ERROR_FRAME;
-    }
-
-    // 操作码
-    uint16_t payloadLength = 0;
-    uint8_t payloadFieldExtraBytes = 0;
-    uint8_t opcode = static_cast<uint8_t >(frameData[0] & 0x0f);
-    if (opcode == WS_TEXT_FRAME)
-    {
-        // 处理utf-8编码的文本帧
-        payloadLength = static_cast<uint16_t >(frameData[1] & 0x7f);
-        if (payloadLength == 0x7e)
-        {
-            uint16_t payloadLength16b = 0;
-            payloadFieldExtraBytes = 2;
-            memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
-            payloadLength = ntohs(payloadLength16b);
-
-        }
-        else if (payloadLength == 0x7f)
-        {
-            // 数据过长,暂不支持
-            uint16_t payloadLength16b = 0;
-            payloadFieldExtraBytes = 4;
-            memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
-            payloadLength = ntohs(payloadLength16b);
-
-
-        }
-    }
-
-    else if (opcode == WS_BINARY_FRAME || opcode == WS_PING_FRAME || opcode == WS_PONG_FRAME)
-    {
-        // 二进制/ping/pong帧暂不处理
-    }
-    else if (opcode == WS_CLOSING_FRAME)
-    {
-        ret = WS_CLOSING_FRAME;
+        *(*send + 1) = *(*send + 1) | 0x7E; // 设置第二个字节后7bit为126
+        UINT16 tmp = htons((UINT16)len);
+        //UINT16 tmp = len;
+        memcpy(*send + 2, &tmp, sizeof(UINT16));
+        headLength += 4;
     }
     else
     {
-        ret = WS_ERROR_FRAME;
+        *(*send + 1) = *(*send + 1) | 0x7F; // 设置第二个字节后为7bit 127
+        UINT64 tmp = htonl((UINT64)len);
+        //UINT64 tmp = len;
+        memcpy(*send + 2, &tmp, sizeof(UINT64));
+        headLength += 10;
     }
-    oput_type.payloadLength=payloadLength;
-    oput_type.opcode=opcode;
-    oput_type.payloadFieldExtraBytes=payloadFieldExtraBytes;
-
+    // 处理掩码
+    if (mask & 0x1)
+    {
+        // 因协议规定, 从服务器向客户端发送的数据, 一定不能使用掩码处理. 所以这边省略
+        headLength += 4;
+    }
+    memcpy((*send) + headLength, message, len);
+    *(*send + (*slen - 1)) = '\0';
+    return 0;
 }
-
-int websocket_parser::wsDecodeFrame(string inFrame, string &outMessage)
-{
-
-        struct WS_type ws_type;
-        int ret = WS_OPENING_FRAME;
-
-
-        const char *frameData = inFrame.c_str();
-        const int frameLength = inFrame.size();
-
-
-        if (frameLength < 2)
-        {
-            ret = WS_ERROR_FRAME;
-        }
-
-
-        // 检查扩展位并忽略
-        if ((frameData[0] & 0x70) != 0x0)
-        {
-            ret = WS_ERROR_FRAME;
-        }
-
-
-        // fin位: 为1表示已接收完整报文, 为0表示继续监听后续报文
-        ret = (frameData[0] & 0x80);
-        ws_type.fin=ret;
-//        if ((frameData[0] & 0x80) != 0x80)
-//        {
-//            ret = WS_ERROR_FRAME;
-//        }
-
-
-        // mask位, 为1表示数据被加密
-        int mask=(frameData[1] & 0x80);
-//        if ((frameData[1] & 0x80) != 0x80)
-//        {
-//            ret = WS_ERROR_FRAME;
-//        }
-
-
-        // 操作码
-        uint16_t payloadLength = 0;
-        uint8_t payloadFieldExtraBytes = 0;
-        uint8_t opcode = static_cast<uint8_t>(frameData[0] & 0x0f);
-
-
-        if (opcode == WS_TEXT_FRAME)
-        {
-            // 处理utf-8编码的文本帧
-            payloadLength = static_cast<uint16_t>(frameData[1] & 0x7f);
-
-
-            if (payloadLength == 0x7e)
-            {
-                uint16_t payloadLength16b = 0;
-
-
-                payloadFieldExtraBytes = 2;
-
-
-                memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
-
-
-                payloadLength = ntohs(payloadLength16b);
-            }
-            else if (payloadLength == 0x7f)
-            {
-                // 数据过长,暂不支持
-                uint16_t payloadLength16b = 0;
-                payloadFieldExtraBytes = 4;
-                memcpy(&payloadLength16b, &frameData[2], payloadFieldExtraBytes);
-                payloadLength = ntohs(payloadLength16b);
-
-            }
-        }
-        else if (opcode == WS_BINARY_FRAME || opcode == WS_PING_FRAME || opcode == WS_PONG_FRAME)
-        {
-            // 二进制/ping/pong帧暂不处理
-        }
-        else if (opcode == WS_CLOSING_FRAME)
-        {
-            ret = WS_CLOSING_FRAME;
-        }
-        else
-        {
-            ret = WS_ERROR_FRAME;
-        }
-
-
-        // 数据解码
-        const char *maskingKey = &frameData[2 + payloadFieldExtraBytes];
-        char *payloadData = new char[payloadLength + 1];
-        if ((mask != 1) && (payloadLength > 0)) {
-            // header: 2字节, masking key: 4字节
-
-
-            memset(payloadData, 0, payloadLength + 1);
-            memcpy(payloadData, &frameData[2 + payloadFieldExtraBytes + 4], payloadLength);
-        }
-        else{
-
-            for (int i = 0; i < payloadLength; i++)
-            {
-                payloadData[i] = payloadData[i] ^ maskingKey[i % 4];
-            }
-
-
-        }
-        outMessage = payloadData;
-         delete[] payloadData;
-
-        int lent=2+payloadFieldExtraBytes+payloadLength-frameLength;
-         ws_type.mask=mask;
-         ws_type.payloadFieldExtraBytes=payloadFieldExtraBytes;
-         ws_type.payloadLength=payloadLength;
-         ws_type.lent=lent;
-        return ret;
-    }

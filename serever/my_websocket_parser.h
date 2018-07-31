@@ -10,36 +10,24 @@
 #include <iostream>
 
 using namespace std;
-enum WS_Status
-{
-    WS_STATUS_CONNECT = 0,
-    WS_STATUS_UNCONNECT = 1,
-};
+typedef unsigned char BYTE; // 定义一个BYTE类型
+typedef unsigned short UINT16; // 定义一个UINT16类型
+typedef unsigned long UINT64; // 定义一个UINT64类型
 
-enum WS_FrameType
-{
-    WS_EMPTY_FRAME = 0xF0,
-    WS_ERROR_FRAME = 0xF1,
-    WS_TEXT_FRAME   = 0x01, //0x1表示文本数据帧
-    WS_BINARY_FRAME = 0x02, //0x2表示二进制数据帧
-    WS_PING_FRAME = 0x09,  //ping
-    WS_PONG_FRAME = 0x0A,   //pong
-    WS_OPENING_FRAME = 0xF3,
-    WS_CLOSING_FRAME = 0x08
 
-};
-struct WS_type{
-    int fin;
-    int mask;
-    int payloadLength;
-    int opcode;
-    int payloadFieldExtraBytes;
-    int lent;
-};
-class websocket_parser
-{
-public:
-    int wsDecodeFrame(string inFrame, string &outMessage);
-    int get_lengt(string inFrame);
-    int wsEncodeFrame(string inMessage, string &outFrame, enum WS_FrameType frameType);
-};
+typedef struct _WebSocketMark {
+    BYTE fin:1;
+    BYTE rsv1:1;
+    BYTE rsv2:1;
+    BYTE rsv3:1;
+    BYTE opcode:4;
+    BYTE mask:1;
+    BYTE payloadlen:7;
+} WSMark;
+
+typedef struct _WebSocketHeader {
+    WSMark mark;
+    UINT64 reallength;
+    unsigned char mask[4];
+    unsigned short headlength;
+} WSHeader;
