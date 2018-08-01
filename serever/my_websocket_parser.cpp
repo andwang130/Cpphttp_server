@@ -64,7 +64,7 @@ int parsePack(unsigned char* buf, size_t length, WSHeader* header)
 * @param           : size_t bufsize 消息长度
 * @param           : unsigned char* container 获取到的消息体存放地址
 * @param           : const WSHeader* pHeader 头结构体地址
-* @return      	: int
+* @return      	: intcfd
 +------------------------------------------------------------------------------
 **/
 int getPackPayloadData(const int cfd, const unsigned char* buf, size_t bufsize, unsigned char* container, const WSHeader* pHeader)

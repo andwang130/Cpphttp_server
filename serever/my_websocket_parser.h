@@ -31,3 +31,7 @@ typedef struct _WebSocketHeader {
     unsigned char mask[4];
     unsigned short headlength;
 } WSHeader;
+int parsePack(unsigned char* buf, size_t length, WSHeader* header);
+int getPackPayloadData(const int cfd, const unsigned char* buf, size_t bufsize, unsigned char* container, const WSHeader* pHeader);
+int packData(const unsigned char* message, size_t len, BYTE fin, BYTE opcode, BYTE mask, unsigned char** send, size_t* slen);
+
