@@ -1,10 +1,10 @@
 #include<iostream>
 using namespace std;
-
 #include <string.h>
 #include "serever/http_server.h"
 #include "serever/Application.h"
 #include "serever/MysqlDB.h"
+#include "serever/my_handelr.h"
 void Application::Route()
 {
     if(path("/douyu"))
@@ -16,6 +16,16 @@ void Application::Route()
     {
         BaseHandler *design=new desingnhandel;
         set_BaseHandler(design);
+    }
+    else if(path("/chat"))
+    {
+        WebsocketHandelr *wxhander=new chat;
+        set_BaseHandler(wxhander);
+    }
+    else if(path("/chat1"))
+    {
+        WebsocketHandelr *wxhander=new chat1;
+        set_BaseHandler(wxhander);
     }
 
 }
