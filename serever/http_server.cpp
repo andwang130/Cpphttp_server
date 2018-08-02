@@ -181,10 +181,16 @@ void Cserver::recv_websocket(int coon,Application *app)
     unsigned char* container = new unsigned char[reallength];
     getPackPayloadData(coon, (unsigned char*)req, 2048, container, &header);
     string str=string((char *)container,0,reallength);
-    if(header.mark.mask==0x1)
+    if(header.mark.opcode==0x1)
     {
         app->ws_handler->on_message(str);
+    } else if(header.mark.opcode==0x8)  //opcode为关闭
+    {
+        app->ws_handler->on_close();
+        close_socket(coon);
     }
+
+
 
     delete container;
 }
@@ -293,6 +299,7 @@ void Cserver::Upgrade_websocket(int coon,Cparser * parser)
     application->ws_handler->wx_requests.coon=coon;
     application->ws_handler->wx_requests.url=parser->requests->url;
     websocket_coon[coon]=application;
+    application->ws_handler->open();
 
 }
 void Cserver::to_http_handel(int coon,Cparser * parser)

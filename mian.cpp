@@ -3,11 +3,11 @@ using namespace std;
 #include <string.h>
 #include "serever/http_server.h"
 #include "serever/Application.h"
-#include "serever/MysqlDB.h"
+//#include "serever/MysqlDB.h"
 #include "serever/my_handelr.h"
 void Application::Route()
 {
-    if(path("/douyu"))
+    if(path("/test"))
     {
         BaseHandler *base1=new loginHandel;
         set_BaseHandler(base1);
@@ -43,7 +43,7 @@ int main()
 //
 //    }
 Server_info server_info;
-server_info.ip="127.0.0.1";
+server_info.ip="0.0.0.0";
 server_info.port=8800;
 Cserver cserver(server_info);
 cserver.run();

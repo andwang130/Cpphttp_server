@@ -5,14 +5,15 @@
 #ifndef UNTITLED5_MY_HANDELR_H
 #define UNTITLED5_MY_HANDELR_H
 
-
+#include <set>
+#include "umit.h"
 
 #include "WebsokcetHandelr.h"
 #include "RequestHandler.h"
 class loginHandel:public BaseHandler
 {
 public:
-
+    static int num;
     loginHandel()
     {
         cout<<"loginHandel 构造"<<endl;
@@ -28,11 +29,16 @@ public:
     }
     void get()
     {
+        num+=1;
+        string strnum=to_string(num);
         cout<<"get_argument"<<get_argument("action")<<endl;
         set_cookies("name","wangjing");
+        string req="<h1>这是一个测试页码</h1>\n<div>当前被访问了：";
+        req+=strnum+"次</div>";
+        wirte((char *)req.c_str());
         //set_status("200");
         //redirect("/desgin");
-        //render("/home/meidai/桌面/len.htmdl");
+        //render("/home/meidai/桌面/len.html");
     }
     void init()
     {
@@ -44,6 +50,7 @@ public:
 
     }
 };
+int loginHandel::num=0;
 class desingnhandel:public BaseHandler
 {
 public:
@@ -74,7 +81,10 @@ public:
 
 class chat1:public WebsocketHandelr
 {
+
 public:
+    static vector<chat1*> set_handelr;
+
     ~chat1()
     {
 
@@ -82,8 +92,21 @@ public:
     void on_message(string message)
     {
         cout<<"收到消息："<<message<<endl;
-        write_message("chat 1");
+        for(int i=0;i<chat1::set_handelr.size();i++)
+        {   if(set_handelr[i]!=this)
+            {
+                set_handelr[i]->write_message(message);
+            }
+        }
+    }
+    void on_close()
+    {
+
+    }
+    void open()
+    {
+    chat1::set_handelr.push_back(this);
     }
 };
-
+vector<chat1*> chat1::set_handelr;
 #endif //UNTITLED5_MY_HANDELR_H
