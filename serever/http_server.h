@@ -6,6 +6,7 @@
 #include <map>
 #include "RequestHandler.h"
 #include "Application.h"
+#include "ThreadPool.hpp"
 using namespace std;
 struct Server_info
 {
@@ -28,25 +29,26 @@ struct configure{
 class Cserver
 {
 private:
-    map<int,Application*>websocket_coon;
+    ThreadPool *Thpoool;
     sockaddr_in serever_in;
     Server_info server_info;
-    Epoll_info epoll_info;
-    void recv_websocket(int coon,Application*app);
-    void recv_http(int coon,Cparser * parser);
-    void Upgrade_websocket(int coon,Cparser * parser);
-    void to_http_handel(int coon,Cparser * parser);
+
+
 
 public:
+    static map<int,Application*>websocket_coon;
+    static Epoll_info epoll_info;
     void init();
     void server_bind();
     void server_accept();
-    void server_recv(int coon);
     void server_epoll_ctl();
     void epoll_while();
-    void close_socket(int coon);
+    static void close_socket(int coon);
     void run();
     Cserver(Server_info serinfo);
     static int wx_send(string message,int coon);
+    static int Cserver_recv(int coon,char *buf,int size);
+    static int websokcet_epoll_ctl(int coon);
+
 
 };

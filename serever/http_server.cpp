@@ -7,19 +7,19 @@
 #include "Application.h"
 #include<sys/time.h>
 #include "MyException.h"
-#include "SHA1.cpp"
-#include "base64.h"
 #include "my_websocket_parser.h"
-int64_t getCurrentTime()      //直接调用这个函数就行了，返回值最好是int64_t，long long应该也可以
-{
-    struct timeval tv;
-    gettimeofday(&tv,NULL);    //该函数在sys/time.h头文件中
-    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
+#include <mutex>
+#include "CHTTP.h"
+#include <signal.h> //信号处理
+map<int,Application*> Cserver::websocket_coon;
+Epoll_info Cserver::epoll_info;
+mutex Mutex;
 Cserver::Cserver(Server_info serinfo)
 {
     server_info.ip=serinfo.ip;
     server_info.port=serinfo.port;
+
+
 
 
 }
@@ -104,18 +104,24 @@ void Cserver::epoll_while()
                         map<int,Application*>::iterator ite=websocket_coon.find(event_list[i].data.fd);
                         if(ite!=websocket_coon.end())
                         {
-                            recv_websocket(event_list[i].data.fd,ite->second);
+
+                                CHTTP http;
+                                http.recv_websocket(event_list[i].data.fd,ite->second);
+
                         }
                         else
+                            //这里范了一个错误，lamdbam函数使用了一个引用
                             {
-                                server_recv(event_list[i].data.fd);
+
+                                CHTTP http;
+                                http.server_recv(event_list[i].data.fd);
                         }
 
 
                     }
                     else
                     {
-                     close_socket(event_list[i].data.fd);
+                        Cserver::close_socket(event_list[i].data.fd);
                     }
 
                 }
@@ -124,31 +130,78 @@ void Cserver::epoll_while()
 
     }
 }
-void Cserver::close_socket(int coon)
+/**
+ +------------------------------------------------------------------------------
+ * @name close_socket
+ +------------------------------------------------------------------------------
+ * @desc        	: 关闭套接字，移除epool监听事件，如果该套接字存在websocket中，也删除map中的
+ +------------------------------------------------------------------------------
+ * @参数1	      	: 一个socket
+ * @author	      	: wangjing
+ * @since       	: 18-6-11
+ * @return      	: void
+ +------------------------------------------------------------------------------
+**/
+void my_epoll_ctl(int coon,int CTL)
 {
+    Mutex.lock();//加锁
+    int myEPOLL_CTL_DEL;
     struct epoll_event event;
     event.data.fd=coon;
-    event.events=EPOLLIN;
-    epoll_ctl(epoll_info.epoll_fd,EPOLL_CTL_DEL,event.data.fd,&event);
+    event.events=EPOLLIN|EPOLLET;
+    if(CTL==EPOLL_CTL_DEL)
+    {
+        myEPOLL_CTL_DEL=EPOLL_CTL_DEL;
+    }
+    else if(CTL==EPOLL_CTL_ADD)
+    {
+        myEPOLL_CTL_DEL=EPOLL_CTL_ADD;
+    }
 
+    epoll_ctl(Cserver::epoll_info.epoll_fd,myEPOLL_CTL_DEL,event.data.fd,&event);
+    Mutex.unlock();//解锁
+}
+void Cserver::close_socket(int coon)
+{
+
+
+    my_epoll_ctl(coon,EPOLL_CTL_DEL);
+    Mutex.lock();//加锁
     map<int,Application*>::iterator ite;
-    ite=websocket_coon.find(coon);
-    if(ite!=websocket_coon.end())
+    ite=Cserver::websocket_coon.find(coon);
+    if(ite!=Cserver::websocket_coon.end())
     {   delete ite->second;
-        websocket_coon.erase(ite);
+        Cserver::websocket_coon.erase(ite);
     }
     close(coon);
+    Mutex.unlock();//解锁
 }
+
+/**
+ +------------------------------------------------------------------------------
+ * @name server_accept
+ +------------------------------------------------------------------------------
+ * @desc        	: 读取建立连接，将新的socket添加到epool轮询
+ +------------------------------------------------------------------------------
+ * @author	      	: wangjing
+ * @since       	: 18-6-11
+ * @return      	: void
+ +------------------------------------------------------------------------------
+**/
 void Cserver::server_accept()
 {
     struct sockaddr_in coo_in;
     socklen_t lent= sizeof(coo_in);
     int con=accept(server_info.server_socket,(struct sockaddr *)&coo_in,&lent);
-    struct epoll_event event;
-    event.data.fd=con;
-    event.events=EPOLLIN;
-    epoll_ctl(epoll_info.epoll_fd,EPOLL_CTL_ADD,event.data.fd,&event);
-    cout<<con<<"建立链接"<<endl;
+    my_epoll_ctl(con,EPOLL_CTL_ADD);
+
+    //EPOLLIN水平触发。EPOLLET边缘触发，默认是水平触发
+    //水平触发，每次有可读事件都会触发
+    //边缘触发，只会触发一次，后面要继续监听需要在添加到epool事件中
+    //这里使用线程池所有使用边缘触发
+
+
+    //cout<<con<<"建立链接"<<endl;
 
 }
 /**
@@ -165,206 +218,30 @@ void Cserver::server_accept()
  +------------------------------------------------------------------------------
 **/
 
-void Cserver::recv_websocket(int coon,Application *app)
+/**
+ +------------------------------------------------------------------------------
+ * @name run
+ +------------------------------------------------------------------------------
+ * @desc        	: 启动服务器
+ +------------------------------------------------------------------------------
+ * @author	      	: wangjing
+ * @param           : 链接的套节字
+ * @param           :该链接对应的app
+ * @since       	: 18-6-11
+ * @return      	: void
+ +------------------------------------------------------------------------------
+**/
+void recvSignal(int sig)
 {
-    char req[2048];
-    int ret=recv(coon,req,1024,0);
-    if(ret==-1||ret==0)
-    {
-        close_socket(coon);
-        return;
-    }
-
-    WSHeader header;
-    parsePack((unsigned char*)req,2048, &header);
-    int reallength=header.reallength + 1;
-    unsigned char* container = new unsigned char[reallength];
-    getPackPayloadData(coon, (unsigned char*)req, 2048, container, &header);
-    string str=string((char *)container,0,reallength);
-    if(header.mark.opcode==0x1)
-    {
-        app->ws_handler->on_message(str);
-    } else if(header.mark.opcode==0x8)  //opcode为关闭
-    {
-        app->ws_handler->on_close();
-        close_socket(coon);
-    }
-
-
-
-    delete container;
-}
-void Cserver::recv_http(int coon,Cparser * parser)
-{
-
-
-    char req[1024];
-    while(true)
-    {
-
-        memset(req,0, sizeof(req));
-        int ret=recv(coon,req,1024,0);
-        string str=string(req,0,ret);
-        if(ret==-1||ret==0)
-        {
-            close_socket(coon);
-            delete parser;
-            return;
-        }
-        if(parser->get_requests_head(str,ret))
-        {
-            break;
-        }
-
-    }
-
-
-    if (parser->requests->body_length<parser->requests->Content_Length&&parser->requests->analysis=="content-length")
-    {
-        while (true) {
-            memset(req,0,1024);
-            int ret=recv(coon,req,1024,0);
-            if(ret==-1||ret==0)
-            {
-                close_socket(coon);
-                delete parser;
-                return;
-            }
-
-            if(parser->Content_Length_analysis(req,ret))
-            {
-                break;
-            }
-        }
-    }
-    if(parser->requests->analysis=="Transfer-Encoding")
-    {
-        parser->chunked_analysis(req,0);
-        while (parser->requests->body_off!=1)
-        {
-
-            memset(req, 0, 1024);
-            int ret = recv(coon, req, 1024, 0);
-            if(ret==-1||ret==0)
-            {
-                close_socket(coon);
-                delete parser;
-                return;
-            }
-            if(parser->chunked_analysis(req,ret))
-            {
-
-                break;
-            }
-        }
-        parser->requests->body_length-parser->get_first_chunked_size();
-
-    }
-}
-void Cserver::Upgrade_websocket(int coon,Cparser * parser)
-{
-    /*升级为websokcet协议
-     *
-     */
-    Application *application=new Application;
-
-    application->ws_implemen(parser->requests->url.c_str());
-    if(application->ws_handler== nullptr)
-    {
-        close_socket(coon);
-        return;
-    }
-    string web_socket_key=parser->requests->headers["Sec-WebSocket-Key"];
-    web_socket_key+="258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-    string Upgrade_respon="HTTP/1.1 101 Switching Protocols\r\n";
-    Upgrade_respon+="Connection: Upgrade\r\n";
-    Upgrade_respon+="Upgrade: WebSocket\r\n";
-    cout<<web_socket_key<<endl;
-    CSHA1 sha1;
-    sha1.Update((unsigned char*)web_socket_key.c_str(),strlen(web_socket_key.c_str()));
-    sha1.Final();
-    unsigned char chSha1[20] = "";
-    sha1.GetHash(chSha1);
-    Base64 base64;
-    string req_web_socket_key=base64.Encode(chSha1,20);
-    cout<<req_web_socket_key<<endl;
-    Upgrade_respon+="Sec-WebSocket-Accept: "+req_web_socket_key+"\r\n";
-    Upgrade_respon+="Sec-WebSocket-Version: 13\r\n";
-    Upgrade_respon+="\r\n";
-    if(send(coon,Upgrade_respon.c_str(),Upgrade_respon.size(),0)==-1)
-    {
-        cout<<"send"<<strerror(errno)<<endl;
-        close_socket(coon);
-    }
-    application->ws_handler->wx_requests.coon=coon;
-    application->ws_handler->wx_requests.url=parser->requests->url;
-    websocket_coon[coon]=application;
-    application->ws_handler->open();
-
-}
-void Cserver::to_http_handel(int coon,Cparser * parser)
-{
-    cout<<"****************"<<endl;
-    cout<<parser->requests->url<<endl;
-    string resp;
-    Application *app = new Application;
-    try {
-
-
-        app->set_requtest(parser->requests);
-        app->implemen();
-        resp = app->response_body();
-    }
-    catch (MyException & e)
-    {
-        resp=e.what();
-    }
-    catch (...)
-    {
-        resp="HTTP/1.1 500 OK";
-
-    }
-
-
-    cout<<resp<<endl;
-    if(send(coon,resp.c_str(),resp.size(),0)==-1)
-    {   cout<<"send"<<strerror(errno)<<endl;
-        close_socket(coon);
-    }
-
-    delete app;
-    close_socket(coon);
-}
-void Cserver::server_recv(int coon)
-{   int64_t stara_time=getCurrentTime();
-    Cparser * parser=new Cparser;
-    recv_http(coon,parser);
-
-    cout<<"Connection:"<<parser->requests->headers["Connection"]<<endl;
-    if(parser->requests->headers["Connection"]=="Upgrade"||parser->requests->headers["Connection"]=="keep-alive, Upgrade") //协议升级为websocket
-    {
-        if(parser->requests->headers["Upgrade"]=="websocket")
-        {
-
-            Upgrade_websocket(coon, parser);
-        }
-    }
-    else
-    {
-        to_http_handel(coon,parser);
-    }
-    delete parser;
-    int64_t end_times=getCurrentTime();
-    cout<<end_times-stara_time<<endl;
-    cout<<end_times<<endl;
-
+    printf("received signal %d !!!\n",sig);
 }
 void Cserver::run()
 {
-    init();
-    server_bind();
-    server_epoll_ctl();
-    epoll_while();
+
+    init(); //初始化
+    server_bind(); //绑定ip
+    server_epoll_ctl(); //epool初始化
+    epoll_while(); //开启epool轮询
 }
 int Cserver::wx_send(string message,int coon)
 {
@@ -384,4 +261,30 @@ int Cserver::wx_send(string message,int coon)
     delete oupt;
     return 0;
 
+}
+int Cserver::Cserver_recv(int coon,char *buf,int size)
+{
+    return recv(coon,buf,size,0);
+
+}
+/**
+ +------------------------------------------------------------------------------
+ * @name websokcet_epoll_ctl
+ +------------------------------------------------------------------------------
+ * @desc        	: websocket是长连接，因为使用的是边触发，所以要把socket重新加入epool监听队列
+ +------------------------------------------------------------------------------
+ * @author	      	: wangjing
+ * @param           : 链接的套节字
+ * @since       	: 18-6-11
+ * @return      	: int
+ +------------------------------------------------------------------------------
+**/
+int Cserver::websokcet_epoll_ctl(int coon)
+{
+    //EPOLLIN水平触发。EPOLLET边缘触发，默认是水平触发
+    //水平触发，每次有可读事件都会触发
+    //边缘触发，只会触发一次，后面要继续监听需要在添加到epool事件中
+    //这里使用线程池所有使用边缘触发
+    my_epoll_ctl(coon,EPOLL_CTL_ADD);
+    return 0;
 }

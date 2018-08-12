@@ -7,7 +7,6 @@
 
 #endif //UNTITLED5_REQUESTHANDLER_HC
 
-#include <mysql/mysql.h>
 #include <iostream>
 #include "my_http_parser.h"
 #include <map>

@@ -12,7 +12,6 @@ Application:: Application()
 }
 Application::~Application()
 {
-    cout<<"析苟application"<<endl;
     if(handler!=nullptr)
     {
         delete handler;

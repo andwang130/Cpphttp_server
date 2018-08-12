@@ -5,6 +5,7 @@
 #include <fstream>
 #include "MyException.h"
 #include <string.h>
+#include <sstream>
 void BaseHandler::_get_argument_form_urlencoded()
 {
     int size=requests->body.size();
@@ -256,19 +257,24 @@ void BaseHandler::wirte(char *str)
 void BaseHandler::render(string path)
 {
     ifstream fs(path);
-    char buff[1024];
+    //char buff[1024];
     if(!fs.is_open()) {
         cout << "render eero" << endl;
         throw MyException(1024);
 
     }
-    while(!fs.eof())
-    {
+    stringstream buffer;
+    buffer << fs.rdbuf();
+    reqspone.body+=buffer.str();
+//    while(!fs.eof())
+//    {
+//
+//        memset(buff,0,1024);
+//        fs.getline(buff,1024);
+//        cout<<buff<<endl;
+//        reqspone.body+=buff;
+//    }
 
-        memset(buff,0,1024);
-        fs.getline(buff,1024);
-        reqspone.body+=buff;
-    }
     fs.close();
 
 }
